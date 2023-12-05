@@ -1,0 +1,16 @@
+input{
+    margin-top: 5%;
+    width: 50%;
+}
+
+.BookSearchResults{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 500);
+    grid-gap: 15px;
+    margin-top: 2%;
+}
+
+.SearchHeader{
+    margin-bottom: -5%;
+}

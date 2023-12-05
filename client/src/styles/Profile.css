@@ -1,0 +1,32 @@
+.Profile{
+    background-color: rgb(87, 66, 40);
+    width: 50%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 20px;
+}
+
+input{
+    width: 50%;
+}
+
+p{
+    margin-bottom: -3%;
+}
+
+.save{
+    margin-top: 2%;
+}
+
+.DeleteUser{
+    margin-top:2%;
+}
+
+.DeleteUser button{
+    background-color: red;
+    color: white;
+}

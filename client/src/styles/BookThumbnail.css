@@ -1,0 +1,21 @@
+.thumbnailCard{
+    background-color: rgb(101, 72, 31);
+    height: 375px;
+}
+
+.thumbnailCard:hover{
+    cursor:pointer;
+}
+
+.thumbnailCard img{
+    width: auto;
+    max-height: 50%;
+    border-width: 10px;
+    border-color: black;
+}
+
+.title{
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    max-height: 20%;
+}

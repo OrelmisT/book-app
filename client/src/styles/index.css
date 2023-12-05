@@ -1,0 +1,19 @@
+body{
+    background-color: rgb(151, 118, 76);
+    text-align: center;
+    color: white;
+}
+
+
+
+.siteHeader{
+    
+    background-color: rgb(98, 69, 31);
+    text-align: center;
+    color: white;
+    font-size: 25 px;
+    width: auto;
+    margin-top: -22px;
+    margin-left: -8px;
+    margin-right: -8px;
+}

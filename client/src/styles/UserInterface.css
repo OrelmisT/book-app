@@ -1,0 +1,73 @@
+.banner{
+    background-color: rgb(98, 69, 31);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: -8px;
+    margin-right: -8px;
+    height: fit-content;
+    margin-top: -10px;
+}
+
+.banner h1{
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1.5%;
+}
+
+.navBarGroup{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no wrap;
+    gap:10px;
+    vertical-align: middle;
+    max-width: 33%;
+    max-height: 100px;
+
+    
+}
+
+.navBarItem{
+    align-self: start; 
+    top:50%;
+    
+}
+
+#logo{
+    width: auto;
+    height: 90%;
+    margin-top: 1.5%;
+    
+}
+
+#centerNavBar{
+    width: 50%;
+    justify-content: space-between;
+}
+
+#centerNavBar h2{
+    margin-top: 6.8%;
+}
+
+#centerNavBar h2:hover{
+    background-color: rgb(82, 59, 28);
+    cursor: pointer;
+}
+
+#centerNavBar h2:active{
+    background-color: rgb(148, 126, 97);
+    cursor: pointer;
+}
+
+.navBarGroup img{
+    width: auto;
+    height: 75%;
+    margin-top: 6%;
+}
+
+.navBarGroup button{
+    margin-top: 20%;
+}
+

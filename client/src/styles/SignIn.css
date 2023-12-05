@@ -1,0 +1,16 @@
+h1{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+#SignInImg{
+    height: auto;
+    max-width: 50%;
+    vertical-align: top;
+    margin-top: 5px;
+}
+
+#desc{
+    margin-top: -10px;
+}
