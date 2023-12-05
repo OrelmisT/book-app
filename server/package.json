@@ -19,6 +19,7 @@
     },
     "scripts": {
         "dev": "nodemon app.ts",
-        "build": "tsc"
+        "build": "tsc",
+        "vercel-build": "echo hello"
     }
 }

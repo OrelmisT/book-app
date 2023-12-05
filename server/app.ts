@@ -24,7 +24,7 @@ app.get("/", async (req:any, res:any) => {
 
 
 //SignUp - or sign in 
-app.post("/api/users/:uid", async (req:any, res:any) => {
+app.post("/users/:uid", async (req:any, res:any) => {
 
     
     // console.log(envVars);
@@ -46,7 +46,7 @@ app.post("/api/users/:uid", async (req:any, res:any) => {
 }});
 
 
-app.put("/api/users/:uid", async (req:any, res:any) => {
+app.put("/users/:uid", async (req:any, res:any) => {
     
         const person:profile = req.body;
         const uid = req.params.uid;
@@ -66,7 +66,7 @@ app.put("/api/users/:uid", async (req:any, res:any) => {
 
 
 //Delete a user
-app.delete("/api/users/:uid", async (req:any, res:any) => {
+app.delete("/users/:uid", async (req:any, res:any) => {
     const uid = req.params.uid;
     try {
         const deletedProfile = await deleteUser(uid);
@@ -80,7 +80,7 @@ app.delete("/api/users/:uid", async (req:any, res:any) => {
 
 
 //Create a post
-app.post("/api/users/:uid/posts", async (req:any, res:any) => {
+app.post("/users/:uid/posts", async (req:any, res:any) => {
     const post: post = req.body.post;
     console.log('here');
     try {
@@ -94,7 +94,7 @@ app.post("/api/users/:uid/posts", async (req:any, res:any) => {
 });
 
 //Get User's posts
-app.get("/api/users/:uid/posts", async (req:any, res:any) => {
+app.get("/users/:uid/posts", async (req:any, res:any) => {
     const uid = req.params.uid;
     try {
         const posts = await getUserPosts(uid);
@@ -107,7 +107,7 @@ app.get("/api/users/:uid/posts", async (req:any, res:any) => {
 
 })
 
-app.get("/api/posts/:bookId", async (req:any, res:any) => {
+app.get("/posts/:bookId", async (req:any, res:any) => {
     const bookId = req.params.bookId;
     try {
         const posts = await getBookPosts(bookId);
@@ -119,7 +119,7 @@ app.get("/api/posts/:bookId", async (req:any, res:any) => {
     }
 })
 
-app.post("/api/users/:uid/readingListPosts", async (req:any, res:any) => {  
+app.post("/users/:uid/readingListPosts", async (req:any, res:any) => {  
     const uid = req.params.uid;
     const bookList: string[]= req.body.bookList;
     try {
@@ -138,3 +138,4 @@ app.listen(port, () => {
     console.log(`SERVER listening on port ${port}`);
   });
 
+export default app;

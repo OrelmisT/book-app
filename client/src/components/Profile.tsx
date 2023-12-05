@@ -20,7 +20,7 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
   //Delete User
   const deleteUser = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/users/${props.uid}`, {method: 'DELETE'})
+    fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}`, {method: 'DELETE'})
     user.clearUser?.();
     signOut();
     props.setPage(0);
@@ -41,7 +41,7 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
   }
 
   const getPosts = async () => {
-    const res = await fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/users/${props.uid}/posts`);
+    const res = await fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}/posts`);
     const d = await res.json();
     setPosts(d.posts);
   }

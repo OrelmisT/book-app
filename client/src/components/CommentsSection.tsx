@@ -23,7 +23,7 @@ const CommentsSection = (props: {user: profile, book:book}) => {
 
     useEffect( () => {
       //gather all comments for this book
-      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/posts/${props.book.id}`).then(res => res.json()).then((data) => {
+      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`).then(res => res.json()).then((data) => {
         setBookComments(data.posts);
       });
     }, 
@@ -51,7 +51,7 @@ const CommentsSection = (props: {user: profile, book:book}) => {
         } as post;
 
         
-        fetch(`${process.env.REACT_APP_BACKEND_ROOT}/api/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
+        fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
 
         setCommentInput("");
         setTitleInput("");

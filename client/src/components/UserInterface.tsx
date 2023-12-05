@@ -39,7 +39,7 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
                     readingList: [] as string[]
                 }
             }
-            fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/users/${uid}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(defaultProfile)})
+            fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${uid}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(defaultProfile)})
             .then(res => res.json()).then(data => {
                 console.log('User Data:');
                 console.log(data);
@@ -54,7 +54,7 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
 
     useEffect(() => {
         setPfp(userProfile.photoURL);
-        fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/users/${userProfile.uid}`,
+        fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`,
         {method: 'PUT', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify( userProfile)});
 

@@ -9,7 +9,7 @@ const Home = (props:profile) => {
 
     //Search all posts for books in User's reading list
     useEffect( () => {
-      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/api/users/${props.uid}/readingListPosts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({bookList: props.readingList})}).then(res => res.json()).then((data) => {
+      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}/readingListPosts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({bookList: props.readingList})}).then(res => res.json()).then((data) => {
       console.log(data.posts);
       setPosts(data.posts);});
      }, [props]);
