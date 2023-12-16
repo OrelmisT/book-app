@@ -2,15 +2,20 @@ import  { useEffect } from 'react'
 import '../styles/SignIn.css'
 import { signIn } from '../utils/auth'
 import { useAuth } from '../utils/AuthUserProvider'
+import { useNavigate } from 'react-router-dom'
 
 
-const SignIn = (props: {setPage: React.Dispatch<React.SetStateAction<number>>}) => {
+const SignIn = () => {
 
     const user = useAuth();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
+        //REDIRECT TO HOME PAGE HERE
+
         if(user.user !== null){
-        props.setPage(1)
+            navigate("/")
         }
     })
 

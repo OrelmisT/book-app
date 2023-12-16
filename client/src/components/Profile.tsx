@@ -5,12 +5,13 @@ import '../styles/Profile.css';
 import { useAuth } from '../utils/AuthUserProvider';
 import { signOut } from '../utils/auth';
 import Post from './Post';
+import { useNavigate } from 'react-router-dom';
 
 
-const Profile = (props:{displayName:string, bio:string, uid:string, readingList: string[], email:string, photoURL:string, setUserProfile: React.Dispatch<React.SetStateAction<profile>>, setPage: React.Dispatch<React.SetStateAction<number>>}) => {
+const Profile = (props:{displayName:string, bio:string, uid:string, readingList: string[], email:string, photoURL:string, setUserProfile: React.Dispatch<React.SetStateAction<profile>>}) => {
 
   const user = useAuth();
-
+  const navigate = useNavigate();
   const [view, setView] = useState(0); //0 = Posts, 1 = Comments, 2 = Profile Edit
   const [displayName, setDisplayName] = useState(props.displayName);
   const [bio, setBio] = useState(props.bio);
@@ -23,7 +24,7 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
     fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}`, {method: 'DELETE'})
     user.clearUser?.();
     signOut();
-    props.setPage(0);
+    navigate("/login")
 }
 
 
@@ -58,7 +59,7 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
       <div className='Profile'>
 
         <h1>{props.displayName}</h1>
-        <img src={props.photoURL} alt='Profile Picture'/>
+        <img src={props.photoURL} alt='Profile Picture' className='prof-photo'/>
         <h2>{props.bio}</h2>
         {(view === 0 || view === 1) && <button onClick={() => setView(2)}>Edit Profile</button>}
       </div>

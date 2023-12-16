@@ -7,15 +7,18 @@ import Profile from './Profile';
 import ReadingList from './ReadingList';
 import Search from './Search';
 import {book, profile} from '../types'
+import { useNavigate } from 'react-router-dom';
 
 
-const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<number>>}) => {
+const UserInterface = () => {
     const user = useAuth();
     const [pfp, setPfp] = useState('https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg');
     
     const [userProfile, setUserProfile] = useState<profile>({} as profile);
     const [contentPage, setContentPage] = useState(0);
     const [books, setBooks] = useState([] as book[]);
+
+    const navigate = useNavigate();
 
 
     const getReadingList =  () => {
@@ -26,6 +29,8 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
     useEffect( () => {
         const uid = user.user?.uid;
         if(uid){
+
+            
 
             //Uses google profile photo by default, an empty bio, and an empty reading list.
             const defaultProfile = {
@@ -47,7 +52,8 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
                 console.log(data.photoURL);
                 setPfp(data.photoURL)
             });
- 
+            
+
         }
             
     }, [])
@@ -78,7 +84,7 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
     const signOutHandler = () => {
         user.clearUser?.();
         signOut();
-        props.setPage(0);
+        navigate("/login");
     }
 
   return (
@@ -98,22 +104,21 @@ const UserInterface = (props: {setPage: React.Dispatch<React.SetStateAction<numb
             </div>
 
             <div className='navBarGroup'>
-                <img src={pfp} alt='Profile Picture' className='navBarItem'></img>
+                <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"}></img>
                 <button onClick={signOutHandler} className='navBarItem'>Sign Out</button>
             </div>
         
 
         </div>
-        <div className='page Body'>
-        </div>
-        <PageContent books={books} pageNumber={contentPage} user= {userProfile} setUserProfile={setUserProfile} setPage = {props.setPage}/>
+    
+        <PageContent books={books} pageNumber={contentPage} user= {userProfile} setUserProfile={setUserProfile}/>
     </>
   )
 }
 
 
 
-const PageContent = (props:{pageNumber:number, books: book[], user:profile, setUserProfile: React.Dispatch<React.SetStateAction<profile>>, setPage:React.Dispatch<React.SetStateAction<number>>}) => {
+const PageContent = (props:{pageNumber:number, books: book[], user:profile, setUserProfile: React.Dispatch<React.SetStateAction<profile>>}) => {
 
     const page = props.pageNumber;
 
@@ -123,7 +128,7 @@ const PageContent = (props:{pageNumber:number, books: book[], user:profile, setU
     )
 
     if(page === 1) return(
-        <Profile {...props.user} setUserProfile = {props.setUserProfile} setPage = {props.setPage}/>
+        <Profile {...props.user} setUserProfile = {props.setUserProfile}/>
     )
 
     if(page === 2) return(
