@@ -1,5 +1,5 @@
 import  {useEffect, useState, useContext} from 'react'
-import {post, profile} from '../types';
+import {post} from '../types';
 import Post from './Post';
 import {ProfileContext} from '../index'
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 const Home = () => {
 
   const [posts, setPosts] = useState([] as post[]);
-  const[userProfile, setUserProfile] = useContext(ProfileContext)
+  const[userProfile] = useContext(ProfileContext)
   const [isLoading, setIsLoading] = useState(true);
 
 

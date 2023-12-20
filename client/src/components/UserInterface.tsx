@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAuth } from '../utils/AuthUserProvider';
 import '../styles/UserInterface.css';
 import { signOut } from '../utils/auth';

@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react'
+import {useState, useContext, useEffect} from 'react'
 import {profile, book} from '../types';
 import BookThumbnail from './BookThumbnail';
 import '../styles/ReadingList.css';
