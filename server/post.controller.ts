@@ -51,14 +51,26 @@ export const getUserReadingListPosts = async (uid:string, bookList: string[]) =>
 
     for(let i = 0; i < bookList.length; i++){
         const posts = await getBookPosts(bookList[i]);
-        console.log(posts);
         allPosts = [...allPosts, ...posts]
     }
-
-    console.log(allPosts);
 
     //Sort all posts by their timeStamp
     allPosts.sort((a,b) => (a.timeStampNum > b.timeStampNum) ? -1 : ((b.timeStampNum > a.timeStampNum) ? 1 : 0));
 
     return allPosts;
+}
+
+
+
+export const deleteUserPosts = async (uid:string) => {
+   
+    const postsRef = db.collection("posts");
+   
+    const snapshot = await postsRef.where("userId", "==", uid).get();
+    
+    const batch = db.batch()
+    snapshot.docs.map((userComment) => {batch.delete(userComment.ref)})
+    await batch.commit();
+
+    
 }

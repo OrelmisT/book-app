@@ -1,28 +1,35 @@
-import  {useEffect, useState} from 'react'
+import  {useEffect, useState, useContext} from 'react'
 import {post, profile} from '../types';
 import Post from './Post';
+import {ProfileContext} from '../index'
+import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 
-const Home = (props:profile) => {
+const Home = () => {
 
   const [posts, setPosts] = useState([] as post[]);
+  const[userProfile, setUserProfile] = useContext(ProfileContext)
+  const [isLoading, setIsLoading] = useState(true);
+
 
     //Search all posts for books in User's reading list
     useEffect( () => {
-      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}/readingListPosts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({bookList: props.readingList})}).then(res => res.json()).then((data) => {
-      console.log(data.posts);
-      setPosts(data.posts);});
-     }, [props]);
+      axios.post(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/readingListPosts`,
+       {bookList: userProfile.readingList}).then(({data}) => setPosts(data.posts)).then(() => {setIsLoading(false)})
+      
+     }, [userProfile]);
 
-     
-
-  
-    if((posts?.length ? posts?.length : 0 ) === 0){
+    
+    if (isLoading){
+      return(<h1>Loading...</h1>)
+    }
+    else if((posts?.length ? posts?.length : 0 ) === 0){
       return(
 
     <div>
-      <h1>Add Books to Your Reading List and </h1>
-      <h1>Engage with Discussions About them Here!</h1>
+      <h1>Add books to your reading list to see posts about them here!</h1>
+      <NavLink to="search"><h2>Search Books Here</h2></NavLink>
     </div>
       )
     }

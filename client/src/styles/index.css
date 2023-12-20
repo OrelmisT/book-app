@@ -2,6 +2,7 @@ body{
     background-color: rgb(151, 118, 76);
     text-align: center;
     color: white;
+    min-width: 1100px;
 }
 
 

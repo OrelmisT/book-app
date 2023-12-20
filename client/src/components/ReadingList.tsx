@@ -1,20 +1,51 @@
-import React, {useState} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {profile, book} from '../types';
 import BookThumbnail from './BookThumbnail';
 import '../styles/ReadingList.css';
 import CommentsSection from './CommentsSection';
+import {ProfileContext} from '../index'
+import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 
-const ReadingList = (props:{books: book[], user:profile, setUserProfile: React.Dispatch<React.SetStateAction<profile>>}) => {
+const ReadingList = () => {
+
+  const[userProfile, setUserProfile] = useContext(ProfileContext)
+  
+  const [isLoading, setIsLoading] = useState(true)
+  const [books, setBooks] = useState([] as book[])
+  useEffect(() => {
+
+    
+
+      if(userProfile.readingList){
+        const readingList = userProfile.readingList;
+        setBooks([])
+        // for (const bookId of readingList){
+        //     axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}?key=${import.meta.env.REACT_APP_BOOKS_KEY}`)
+        //     .then(({data}) => {setBooks((bl) => [...bl, data]); setIsLoading(false)})
+        // }
+        const bookList = {books: readingList}
+        axios.put(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/readingList`, bookList)
+        .then(({data}) => {setBooks(data.books); setIsLoading(false);})
+        
+      }
+    
+}, [userProfile.readingList]);
+
+
+
+  
+ 
   const [view, setView] = useState(0); //0 = ReadingList, 1 = Book Info
   const [currentBook, setCurrentBook] = useState({} as book);
   const addBookToReadingList = () => {
-    const updatedUser = {...props.user, readingList: [...props.user.readingList, currentBook.id]} as profile;
-    props.setUserProfile(updatedUser);
+    const updatedUser = {...userProfile, readingList: [...userProfile.readingList, currentBook.id]} as profile;
+    setUserProfile(updatedUser);
   }
   const removeBookFromReadingList = () => {
-    const updatedUser = {...props.user, readingList: props.user.readingList.filter((bookId) => bookId !== currentBook.id)} as profile;
-    props.setUserProfile(updatedUser);
+    const updatedUser = {...userProfile, readingList: userProfile.readingList.filter((bookId) => bookId !== currentBook.id)} as profile;
+    setUserProfile(updatedUser);
 }
 
   //This function take in a string, s, and removes all pairs of angle brackets and the text between them.
@@ -41,15 +72,27 @@ const ReadingList = (props:{books: book[], user:profile, setUserProfile: React.D
 }
 
 
+  if(isLoading){
+    return (<h1>Loading...</h1>)
+  }
 
-  if (view === 0){
+  else if (books.length < 1){
+    return (
+      <>
+        <h1>There are no books in your reading list yet!</h1>
+        <NavLink to = "../search"><h2>Search Books Here!</h2></NavLink>
+      </>
+    )
+  }
+
+  else if (view === 0){
 
     
     return (
       <>
       <h1 className='ReadingListHeader'>Your Reading List</h1>
       <div className='BookSearchResults'>
-       {props.books.map((b) => {
+       {books.map((b) => {
          return(
            <div className='BookSearchResult' onClick={() => handleEnterBook(b)}>
                         
@@ -70,9 +113,9 @@ else if (view === 1) {
             <h3>{currentBook.volumeInfo.authors}</h3>
             <h4>{removeAngleBrackets(currentBook.volumeInfo.description)}</h4>
             <button onClick={() => setView(0)}>Back To Reading List</button>
-            {!props.user.readingList.includes(currentBook.id) &&<button onClick={addBookToReadingList}>Add To Reading List</button>}
-            {props.user.readingList.includes(currentBook.id) &&<button onClick={removeBookFromReadingList}>Remove From Reading List</button>}
-            <CommentsSection user={props.user} book={currentBook}/>
+            {!userProfile.readingList.includes(currentBook.id) &&<button onClick={addBookToReadingList}>Add To Reading List</button>}
+            {userProfile.readingList.includes(currentBook.id) &&<button onClick={removeBookFromReadingList}>Remove From Reading List</button>}
+            <CommentsSection user={userProfile} book={currentBook}/>
         </div>
   </>)
 }

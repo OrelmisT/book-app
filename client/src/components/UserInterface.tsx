@@ -1,29 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useAuth } from '../utils/AuthUserProvider';
 import '../styles/UserInterface.css';
 import { signOut } from '../utils/auth';
-import Home from './Home';
-import Profile from './Profile';
-import ReadingList from './ReadingList';
-import Search from './Search';
-import {book, profile} from '../types'
-import { useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { ProfileContext } from '../index'
+import axios from 'axios';
 
 
 const UserInterface = () => {
     const user = useAuth();
-    const [pfp, setPfp] = useState('https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg');
-    
-    const [userProfile, setUserProfile] = useState<profile>({} as profile);
-    const [contentPage, setContentPage] = useState(0);
-    const [books, setBooks] = useState([] as book[]);
-
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if(!user.user){
+            navigate("/login")
+        }
+    }, [])
 
-    const getReadingList =  () => {
-            setContentPage(2);
-    }
+
+    const [pfp, setPfp] = useState('https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg');
+    
+    const[userProfile, setUserProfile] = useContext(ProfileContext)
+
 
     //Fetch User Data. If user data doesn't exist, create it.
     useEffect( () => {
@@ -44,14 +42,12 @@ const UserInterface = () => {
                     readingList: [] as string[]
                 }
             }
-            fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${uid}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(defaultProfile)})
-            .then(res => res.json()).then(data => {
-                console.log('User Data:');
-                console.log(data);
+
+            axios.post(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${uid}`, 
+            defaultProfile).then(({data}) => {
                 setUserProfile(data);
-                console.log(data.photoURL);
-                setPfp(data.photoURL)
-            });
+                setPfp(data.photoURL);
+            })
             
 
         }
@@ -60,23 +56,11 @@ const UserInterface = () => {
 
     useEffect(() => {
         setPfp(userProfile.photoURL);
-        fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`,
-        {method: 'PUT', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify( userProfile)});
+        // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`,
+        // {method: 'PUT', headers: {'Content-Type': 'application/json'},
+        // body: JSON.stringify( userProfile)});
 
-
-
-        if(userProfile.readingList){
-        const readingList = userProfile.readingList;
-            const booksList = [] as book[];
-            for (const bookId of readingList){
-                fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}?key=${import.meta.env.REACT_APP_BOOKS_KEY}`)
-                .then(res => res.json()).then(data => {
-                    booksList.push(data);
-                })
-            }
-            setBooks(booksList);
-        }
+        axios.put(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`, userProfile);
         
     }, [userProfile]);
 
@@ -92,15 +76,15 @@ const UserInterface = () => {
         <div className='banner'>
             
             <div className='navBarGroup'>
-                <h1 className='navBarItem'>The Bookshelf Society</h1>
+                <h1 className='navBarItem' onClick={() => navigate("/home")}>The Bookshelf Society</h1>
                 <img src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>
             </div>
 
             <div className='navBarGroup' id='centerNavBar'>
-                <h2 onClick={() => setContentPage(0)}>Home</h2>
-                <h2 onClick={() => setContentPage(1)}>Profile</h2>
-                <h2 onClick={getReadingList}>Reading List</h2>
-                <h2 onClick={() => setContentPage(3)}>Search</h2>
+                <NavLink to="." end className={({isActive}) => isActive ? 'active navLink' : 'navLink' }><h2>Home</h2></NavLink>
+                <NavLink to = "profile" className={({isActive}) => isActive ? 'active navLink' : 'navLink' }><h2>Profile</h2></NavLink>
+                <NavLink to = "reading-list" className={({isActive}) => isActive ? 'active navLink' : 'navLink' }><h2>Reading List</h2></NavLink>
+                <NavLink to = "search" className = {({isActive}) => isActive ? 'active navLink' : 'navLink' }><h2>Search</h2></NavLink>
             </div>
 
             <div className='navBarGroup'>
@@ -110,37 +94,12 @@ const UserInterface = () => {
         
 
         </div>
+
+        <Outlet />
     
-        <PageContent books={books} pageNumber={contentPage} user= {userProfile} setUserProfile={setUserProfile}/>
+        {/* <PageContent  pageNumber={contentPage}/> */}
     </>
   )
-}
-
-
-
-const PageContent = (props:{pageNumber:number, books: book[], user:profile, setUserProfile: React.Dispatch<React.SetStateAction<profile>>}) => {
-
-    const page = props.pageNumber;
-
-
-    if(page === 0) return(
-        <Home {...props.user}/>
-    )
-
-    if(page === 1) return(
-        <Profile {...props.user} setUserProfile = {props.setUserProfile}/>
-    )
-
-    if(page === 2) return(
-        <ReadingList books = {props.books} user = {props.user} setUserProfile = {props.setUserProfile}/>
-    )
-
-    if(page === 3) return(
-        <Search user={props.user} setUserProfile={props.setUserProfile}/>
-    )
-    return(
-        <></>
-    )
 }
 
 export default UserInterface

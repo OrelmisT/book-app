@@ -9,12 +9,27 @@
     margin-top: -10px;
 }
 
+.navLink{
+    color:white;
+    height: min-content;
+    text-decoration: none;
+    margin-top: 7%;
+}
+
+.navLink h2 {
+    margin: 5px;
+}
+
 .banner h1{
     padding-left: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 1.5%;
+}
+
+.banner h1:hover {
+    cursor: pointer;
 }
 
 .navBarGroup{
@@ -47,9 +62,7 @@
     justify-content: space-between;
 }
 
-#centerNavBar h2{
-    margin-top: 6.8%;
-}
+
 
 #centerNavBar h2:hover{
     background-color: rgb(82, 59, 28);
@@ -73,4 +86,8 @@
 
 #pfp{
     height: 75%;
+}
+
+.active{
+    background-color: rgb(82, 59, 28);
 }

@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {book, post, profile} from '../types'
 import Post from './Post';
 import '../styles/CommentsSection.css'
+import axios from 'axios';
 
 const CommentsSection = (props: {user: profile, book:book}) => {
 
@@ -23,9 +24,13 @@ const CommentsSection = (props: {user: profile, book:book}) => {
 
     useEffect( () => {
       //gather all comments for this book
-      fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`).then(res => res.json()).then((data) => {
-        setBookComments(data.posts);
-      });
+      // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`).then(res => res.json()).then((data) => {
+      //   setBookComments(data.posts);
+      // });
+
+      axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`)
+      .then(({data}) => setBookComments(data.posts));
+
     }, 
     []);
 
@@ -51,7 +56,8 @@ const CommentsSection = (props: {user: profile, book:book}) => {
         } as post;
 
         
-        fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
+        // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
+        axios.post(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {post: newComment})
 
         setCommentInput("");
         setTitleInput("");

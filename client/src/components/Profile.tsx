@@ -1,27 +1,32 @@
 
-import React, { useEffect, useState } from 'react'
-import { profile, post} from '../types';
+import React, { useEffect, useState, useContext } from 'react'
+import {post} from '../types';
 import '../styles/Profile.css';
 import { useAuth } from '../utils/AuthUserProvider';
 import { signOut } from '../utils/auth';
 import Post from './Post';
 import { useNavigate } from 'react-router-dom';
+import { ProfileContext } from '../index';
+import axios from 'axios';
 
 
-const Profile = (props:{displayName:string, bio:string, uid:string, readingList: string[], email:string, photoURL:string, setUserProfile: React.Dispatch<React.SetStateAction<profile>>}) => {
+const Profile = () => {
+
+  const[userProfile, setUserProfile] = useContext(ProfileContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const user = useAuth();
   const navigate = useNavigate();
   const [view, setView] = useState(0); //0 = Posts, 1 = Comments, 2 = Profile Edit
-  const [displayName, setDisplayName] = useState(props.displayName);
-  const [bio, setBio] = useState(props.bio);
-  const [photoURL, setPhotoURL] = useState(props.photoURL);
+  const [displayName, setDisplayName] = useState(userProfile.displayName);
+  const [bio, setBio] = useState(userProfile.bio);
+  const [photoURL, setPhotoURL] = useState(userProfile.photoURL);
   const [posts, setPosts] = useState([] as post[]);
 
   //Delete User
   const deleteUser = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}`, {method: 'DELETE'})
+    axios.delete(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`);
     user.clearUser?.();
     signOut();
     navigate("/login")
@@ -31,36 +36,33 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
   const updateProfile = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const updatedUser = {displayName: displayName
-      , bio: bio, photoURL: photoURL, uid: props.uid, readingList: props.readingList,
-       email: props.email};
+      , bio: bio, photoURL: photoURL, uid: userProfile.uid, readingList: userProfile.readingList,
+       email: userProfile.email};
 
 
-    props.setUserProfile(updatedUser);
+    setUserProfile(updatedUser);
 
     setView(0);
 
   }
 
-  const getPosts = async () => {
-    const res = await fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.uid}/posts`);
-    const d = await res.json();
-    setPosts(d.posts);
-  }
 
   // Fetch User's comments and posts
   useEffect(() => {
-    getPosts();
+
+    axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/posts`)
+    .then(({data}) => {setPosts(data.posts); setIsLoading(false)});
     
-  }, []);
+  }, [user]);
 
   return (
 
     <div>
       <div className='Profile'>
 
-        <h1>{props.displayName}</h1>
-        <img src={props.photoURL} alt='Profile Picture' className='prof-photo'/>
-        <h2>{props.bio}</h2>
+        <h1>{userProfile.displayName}</h1>
+        <img src={userProfile.photoURL} alt='Profile Picture' className='prof-photo'/>
+        <h2>{userProfile.bio}</h2>
         {(view === 0 || view === 1) && <button onClick={() => setView(2)}>Edit Profile</button>}
       </div>
       {
@@ -68,6 +70,8 @@ const Profile = (props:{displayName:string, bio:string, uid:string, readingList:
           <div className='ProfilePosts'>
             <h1>Posts</h1>
             {posts.map((p) => <Post {...p}/>)}
+            {isLoading ? <h2>Loading...</h2> : <></>}
+            {posts.length < 1 && !isLoading ? <h2>You haven't made any posts yet!</h2> : <></>}
           </div>
         ) : view === 1 ? (
           <div className='ProfileComments'>
