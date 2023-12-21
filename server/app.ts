@@ -12,7 +12,7 @@ const port = 8080;
 
 
 
-
+require('dotenv').config()
 app.use(cors());
 app.use(express.json());
 
@@ -149,7 +149,7 @@ app.put("/users/:uid/readingList", async (req:any, res:any) => {
 
     try{
         for (let bookId of bookIdList) {
-            const res = await axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}?key=AIzaSyB9WLA7-drn_rM31AlbXGx6ddCc_1onjdo`)
+            const res = await axios.get(`https://www.googleapis.com/books/v1/volumes/${bookId}?key=${process.env.BOOKS_KEY}`)
             books.push(res.data)
         }
 
