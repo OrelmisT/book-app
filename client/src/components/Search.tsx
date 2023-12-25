@@ -66,7 +66,7 @@ const Search = () => {
         <div className='BookSearchResults'>
             {books.map((b) => {
                 return(
-                    <div className='BookSearchResult' onClick={() =>handleEnterBook(b)}>
+                    <div className='BookSearchResult' key={b.id} onClick={() =>handleEnterBook(b)}>
                         <BookThumbnail {...b}/>
                     </div>
                 )

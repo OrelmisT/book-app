@@ -1,9 +1,10 @@
 import express, { Express } from "express";
 import cors from "cors";
 
-import { post, profile, book} from './types';
-import { signUp, updateUser, deleteUser} from "./people.controller";
-import { createPost, getUserPosts, getBookPosts, getUserReadingListPosts, deleteUserPosts } from "./post.controller";
+import { post, profile, book, reply} from './types';
+import { signUp, updateUser, deleteUser, getUser} from "./people.controller";
+import { createPost, getUserPosts, getBookPosts, getUserReadingListPosts, deleteUserPosts, getPost, updatePostLikes} from "./post.controller";
+import { createReply, getReplies, updateReplyLikes } from "./reply.controller";
 import axios from 'axios';
 
 
@@ -46,6 +47,23 @@ app.post("/users/:uid", async (req:any, res:any) => {
         })
 
 }});
+
+
+app.get("/users/:uid", async (req:any, res:any) => {
+    const uid = req.params.uid;
+
+    try {
+
+        const user = await getUser(uid);
+        res.status(200).json({userInfo: user});
+        
+    } catch (error) {
+        res.status(500).json({
+            error: `Something went wrong while retrieving the user`
+        })
+
+}});
+
 
 
 //Update the User's Profile 
@@ -161,6 +179,89 @@ app.put("/users/:uid/readingList", async (req:any, res:any) => {
         })
     }
 
+
+
+})
+
+
+app.get("/user-posts/:postId", async(req: any, res: any) => {
+    const postId = req.params.postId
+
+    try{
+        const post = await getPost(postId)
+        console.log(post)
+        res.status(200).json({postInfo: post})
+
+
+
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong while trying to retrieve this Post'})
+    }
+
+})
+
+app.put('/posts/:postId/likes', async(req: any, res: any) => {
+    const postId = req.params.postId
+    const {like, dislike, userId} = req.body
+    console.log({like, dislike, userId})
+
+    try {
+        await updatePostLikes(like, dislike, userId, postId)
+        res.status(200).json({message: 'Successfully updated likes for this post'})
+
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong while trying to like/dislike this post'})
+    }
+
+
+})
+
+//Create a new reply
+app.post('/replies', async(req: any, res: any) => {
+    const reply: reply = req.body
+
+    try{
+        const rep =  await createReply(reply);
+        res.status(200).json(rep)
+
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong while trying to create a reply'})
+
+
+    }
+
+
+})
+
+
+//Get the replies for a post
+app.get('/posts/:postId/replies', async(req: any, res: any) => {
+
+    const postId = req.params.postId
+    try{
+        const replies = await getReplies(postId);
+        res.status(200).json({replies: replies})
+
+    }catch(error){
+        res.status(500).json({error: "Something went wrong while trying to retrieve replies for this post"})
+    }
+
+
+})
+
+//update reply likes
+app.put('/replies/:replyId/likes', async(req: any, res: any) => {
+    const replyId = req.params.replyId
+    const {like, dislike, userId} = req.body
+    console.log({like, dislike, userId})
+
+    try {
+        await updateReplyLikes(like, dislike, userId, replyId)
+        res.status(200).json({message: 'Successfully updated likes for this post'})
+
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong while trying to like/dislike this post'})
+    }
 
 
 })

@@ -1,30 +1,36 @@
-.CommentSub{
+.ReplySub{
     background-color: rgb(90, 62, 30);
-    width: 75%;
+    width: 65%;
     margin-left: auto;
     margin-right: auto;
     padding-bottom: 10px;
     padding-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    border: 2px solid black;
+    margin-top: 20px;
+}
+
+.replyInputGroup h2{
+    margin-bottom: -20px;
 }
 
 
-.commentInputGroup h4{
+.replyInputGroup h4{
     margin-bottom: -50px;
     text-align: left;
     margin-left: 25%;
 }
-.commentInputGroup{
+.replyInputGroup{
     margin-bottom: 10px;
 }
 
-#comment{
+#reply{
     height: 100px;
 }
 
-.commentInput{
-    width:50%;
-    height: 150px;
+textarea{
+    width:75%;
+    height: 120px;
     margin-top: 5%;
     margin-left: auto;
     margin-right: auto;

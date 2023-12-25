@@ -5,6 +5,19 @@ const peopleCollectionRef = db.collection("people");
 
 
 
+export const getUser = async (uid:string) => {
+    const newDocRef = peopleCollectionRef.doc(uid);
+    const document = await newDocRef.get();
+
+    if(!document.exists){
+        throw console.error("This user does not exist.");
+
+    }
+
+    return document.data();
+}
+
+
 //create a new user account
 export const signUp = async (uid:string,person:profile) => {
 

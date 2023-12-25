@@ -5,6 +5,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
+    border: 2px solid black;
    
 }
 
@@ -42,6 +43,10 @@
 
 .commentContents h4{
     margin-left:5%;
+}
+
+.commentContents:hover{
+    cursor: pointer;
 }
 
 

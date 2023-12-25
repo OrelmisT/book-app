@@ -1,3 +1,4 @@
+import { FieldValue } from "firebase-admin/firestore";
 import {db} from "./firebase";
 import { post } from "./types";
 
@@ -73,4 +74,38 @@ export const deleteUserPosts = async (uid:string) => {
     await batch.commit();
 
     
+}
+
+
+export const getPost = async (postId:string) => {
+    const postRef =  db.collection("posts").doc(postId)
+    const postInfo = await postRef.get()
+
+
+    if (!postInfo.exists){
+        throw console.error("This post does not exist");
+    }
+
+    return  postInfo.data()
+}
+
+
+export const updatePostLikes = async (like:boolean, dislike:boolean, userId: string, postId: string) => {
+    const postRef =  db.collection("posts").doc(postId)
+    if(like){
+       await postRef.update('likers', FieldValue.arrayUnion(userId))
+
+    }else{
+        await postRef.update('likers', FieldValue.arrayRemove(userId))
+
+    }
+
+    if(dislike){
+        await postRef.update('dislikers', FieldValue.arrayUnion(userId))
+
+    }else{
+        await postRef.update('dislikers', FieldValue.arrayRemove(userId))
+
+    }
+
 }

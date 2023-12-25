@@ -37,7 +37,21 @@ export type post = {
     userId:string,
     userDisplayName: string,
     timestamp: string,
-    likes: number,
     bookThumbnail: string,
-    timeStampNum: number
+    timeStampNum: number,
+    likers: string [],
+    dislikers:string[],
+    edited: boolean
+}
+
+export type reply = {
+    replyId: string,
+    postId: string,
+    posterId: string,
+    timestamp: string,
+    timeStampNum: number,
+    likers: string [],
+    dislikers: string[],
+    body: string,
+    edited: boolean
 }

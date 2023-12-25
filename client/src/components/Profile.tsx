@@ -69,7 +69,7 @@ const Profile = () => {
         view === 0 ? (
           <div className='ProfilePosts'>
             <h1>Posts</h1>
-            {posts.map((p) => <Post {...p}/>)}
+            {posts.map((p) => <Post {...p} key = {p.postId}/>)}
             {isLoading ? <h2>Loading...</h2> : <></>}
             {posts.length < 1 && !isLoading ? <h2>You haven't made any posts yet!</h2> : <></>}
           </div>

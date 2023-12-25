@@ -38,7 +38,7 @@ const Home = () => {
       <h1>Posts</h1>
       {posts.map((p) => {
         return(
-          <Post {...p}></Post>
+          <Post {...p} key={p.postId}></Post>
         )
       })}
     </>)

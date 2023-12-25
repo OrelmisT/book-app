@@ -1,0 +1,90 @@
+.post{
+    
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    display: flex;
+    background-color: rgb(90, 62, 30);
+    margin-top: 2%;
+    border: 2px solid black;
+}
+
+.bookthumb{
+    border-right: 2px solid black;
+   align-content: center;
+   align-items: center;
+   width: 25%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   padding-bottom: 15px;
+   padding-top: 15px;
+}
+
+.bookthumb img{
+    max-width: 100px;
+    height: auto;
+    vertical-align: auto;
+    margin-top:auto;
+    margin-bottom: auto;
+}
+
+.postconts{
+
+    width:65%;
+    display:flex;
+    flex-direction: column;
+    border-right: 2px solid black;
+
+
+}
+
+.likes{
+    width: 10%;
+    display:flex;
+    flex-direction: column;
+}
+
+.post-text{
+    height: auto;
+    
+}
+
+.post-text h4{
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.post-user-info{
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    
+}
+
+.post-user-info img{
+    margin-top: 5px;
+    margin-right: 5px;
+    height: 75%;
+    top: 50%;
+}
+
+.likes{
+    justify-content: center;
+    
+}
+
+.likes button{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.enabled{
+    background-color: rgb(160, 151, 151);
+}
+
+
+
