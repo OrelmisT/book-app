@@ -1,18 +1,17 @@
 import {useState, useContext, useEffect} from 'react'
-import {profile, book} from '../types';
+import {book} from '../types';
 import BookThumbnail from './BookThumbnail';
 import '../styles/ReadingList.css';
-import CommentsSection from './CommentsSection';
 import {ProfileContext} from '../index'
 import axios from 'axios';
-import { NavLink, Navigate, redirect, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 
 const ReadingList = () => {
 
   const nav = useNavigate();
 
-  const[userProfile, setUserProfile] = useContext(ProfileContext)
+  const[userProfile] = useContext(ProfileContext)
   
   const [isLoading, setIsLoading] = useState(true)
   const [books, setBooks] = useState([] as book[])
@@ -37,16 +36,9 @@ const ReadingList = () => {
 
 
 
-  
- 
-  const [view, setView] = useState(0); //0 = ReadingList, 1 = Book Info
-  const [currentBook, setCurrentBook] = useState({} as book);
 
   const handleEnterBook = (b: book) => {
-    setCurrentBook(b);
-
     nav(`../books/${b.id}`)
-    setView(1);
 }
 
 
