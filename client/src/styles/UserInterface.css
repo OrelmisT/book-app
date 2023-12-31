@@ -86,8 +86,18 @@
 
 #pfp{
     height: 75%;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+
+#pfp:hover{
+    cursor:pointer;
+
 }
 
 .active{
     background-color: rgb(82, 59, 28);
+    border-width: 10px;
+    border-color: black;
 }
+

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react"
-import { useParams} from "react-router-dom"
+import { useParams, useNavigate} from "react-router-dom"
 import { post, profile } from "../types"
 import axios from "axios"
 import '../styles/PostDetailedView.css'
@@ -7,6 +7,7 @@ import { ProfileContext } from ".."
 import ReplySection from "../components/ReplySection"
 
 const PostDetailedView = () => {
+    const nav = useNavigate()
     const [profile]  = useContext(ProfileContext)
     const [isLiked, setLiked] = useState(false);
     const [isDisliked, setDisliked] = useState (false);
@@ -129,7 +130,7 @@ const PostDetailedView = () => {
         <>
             <div className="post">
 
-                <div className="bookthumb">
+                <div className="bookthumb" onClick={() => nav(`../books/${postInfo.bookId}`)}>
                     <h2>{postInfo.bookTitle}</h2>
                     <img src={postInfo.bookThumbnail ? postInfo.bookThumbnail : defaultImage}></img>
 

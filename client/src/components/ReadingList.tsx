@@ -5,10 +5,12 @@ import '../styles/ReadingList.css';
 import CommentsSection from './CommentsSection';
 import {ProfileContext} from '../index'
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, redirect, useNavigate } from 'react-router-dom';
 
 
 const ReadingList = () => {
+
+  const nav = useNavigate();
 
   const[userProfile, setUserProfile] = useContext(ProfileContext)
   
@@ -39,35 +41,11 @@ const ReadingList = () => {
  
   const [view, setView] = useState(0); //0 = ReadingList, 1 = Book Info
   const [currentBook, setCurrentBook] = useState({} as book);
-  const addBookToReadingList = () => {
-    const updatedUser = {...userProfile, readingList: [...userProfile.readingList, currentBook.id]} as profile;
-    setUserProfile(updatedUser);
-  }
-  const removeBookFromReadingList = () => {
-    const updatedUser = {...userProfile, readingList: userProfile.readingList.filter((bookId) => bookId !== currentBook.id)} as profile;
-    setUserProfile(updatedUser);
-}
-
-  //This function take in a string, s, and removes all pairs of angle brackets and the text between them.
-  const removeAngleBrackets = (s:string) => {
-    let result = "";
-    let i = 0;
-    while(i < s.length){
-      if(s[i] === '<'){
-        while(s[i] !== '>'){
-          i++;
-        }
-      }
-      else{
-        result += s[i];
-      }
-      i++;
-    }
-    return result;
-  }
 
   const handleEnterBook = (b: book) => {
     setCurrentBook(b);
+
+    nav(`../books/${b.id}`)
     setView(1);
 }
 
@@ -85,10 +63,10 @@ const ReadingList = () => {
     )
   }
 
-  else if (view === 0){
+  // else if (view === 0){
 
     
-    return (
+  return (
       <>
       <h1 className='ReadingListHeader'>Your Reading List</h1>
       <div className='BookSearchResults'>
@@ -103,25 +81,6 @@ const ReadingList = () => {
     </div>
       </>
   )
-}
-
-else if (view === 1) {
-  return(<>
-    <div>
-            <h1>{currentBook.volumeInfo.title}</h1>
-            <img src={currentBook.volumeInfo.imageLinks.smallThumbnail}></img>
-            <h3>{currentBook.volumeInfo.authors}</h3>
-            <h4>{removeAngleBrackets(currentBook.volumeInfo.description)}</h4>
-            <button onClick={() => setView(0)}>Back To Reading List</button>
-            {!userProfile.readingList.includes(currentBook.id) &&<button onClick={addBookToReadingList}>Add To Reading List</button>}
-            {userProfile.readingList.includes(currentBook.id) &&<button onClick={removeBookFromReadingList}>Remove From Reading List</button>}
-            <CommentsSection user={userProfile} book={currentBook}/>
-        </div>
-  </>)
-}
-else{
-  return(<></>)
-}
 }
 
 export default ReadingList

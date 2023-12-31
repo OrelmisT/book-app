@@ -18,10 +18,6 @@ p{
     margin-bottom: -3%;
 }
 
-.save{
-    margin-top: 2%;
-}
-
 .DeleteUser{
     margin-top:2%;
 }
@@ -34,4 +30,31 @@ p{
 .prof-photo{
     width: auto;
     max-height: 200px;
+    border-radius: 50%;
+    border: solid black 2px;
+}
+
+.PostOrReply{
+    display: flex;
+    justify-content:center;
+    gap: 50px;
+}
+
+.isSelected{
+    text-decoration: underline;
+}
+
+.pointer:hover{
+    cursor:pointer;
+}
+
+.sideBySideButtons{
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    gap: 20px;
+}
+
+.sideBySideButtons button{
+    width: 80px;
 }

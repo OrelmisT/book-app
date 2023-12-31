@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useAuth } from '../utils/AuthUserProvider';
 import '../styles/UserInterface.css';
 import { signOut } from '../utils/auth';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation} from 'react-router-dom';
 import { ProfileContext } from '../index'
 import axios from 'axios';
 
@@ -10,10 +10,11 @@ import axios from 'axios';
 const UserInterface = () => {
     const user = useAuth();
     const navigate = useNavigate();
+    const path =  useLocation().pathname
 
     useEffect(() => {
         if(!user.user){
-            navigate("/login")
+            navigate(`/login?redirect-to=${path}`)
         }
     }, [])
 
@@ -88,7 +89,7 @@ const UserInterface = () => {
             </div>
 
             <div className='navBarGroup'>
-                <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"}></img>
+                <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"} onClick={() => navigate("profile")}></img>
                 <button onClick={signOutHandler} className='navBarItem'>Sign Out</button>
             </div>
         

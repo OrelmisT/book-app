@@ -12,7 +12,7 @@ const Post = (props:post) => {
   return (
     <>
       <div className='postThumbnail'>
-          <div className='BookThumbnail'>
+          <div className='BookThumbnail' onClick={() => nav(`/home/books/${props.bookId}`)}>
             <h2>{props.bookTitle}</h2>
             <img src={props.bookThumbnail} alt={props.bookTitle}/>
           </div>

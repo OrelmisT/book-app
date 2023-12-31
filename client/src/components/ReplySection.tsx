@@ -75,7 +75,11 @@ const ReplySection = ({postId}: {postId: string}) => {
         </div>
         <button onClick={handleReplyInput}>Post</button>
       </div>
-        {replies.map((r) => {
+        {replies.sort((a, b) => {
+            const countA = a.dislikers.length - a.likers.length
+            const countB = b.dislikers.length - b.likers.length
+            return countA - countB
+        }).map((r) => {
             return(
                 <div>
                     <Reply {...r} key = {r.replyId}/>

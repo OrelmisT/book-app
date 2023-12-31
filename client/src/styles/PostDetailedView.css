@@ -29,6 +29,10 @@
     margin-bottom: auto;
 }
 
+.bookthumb:hover{
+    cursor: pointer;
+}
+
 .postconts{
 
     width:65%;
@@ -69,6 +73,7 @@
     margin-right: 5px;
     height: 75%;
     top: 50%;
+    border-radius: 50%;
 }
 
 .likes{

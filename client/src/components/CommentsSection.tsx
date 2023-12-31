@@ -23,16 +23,10 @@ const CommentsSection = (props: {user: profile, book:book}) => {
     }
 
     useEffect( () => {
-      //gather all comments for this book
-      // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`).then(res => res.json()).then((data) => {
-      //   setBookComments(data.posts);
-      // });
-
       axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`)
       .then(({data}) => setBookComments(data.posts));
 
-    }, 
-    []);
+    }, [props.book]);
 
     const handleCommentInput = () => {
 

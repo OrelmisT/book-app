@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useContext } from 'react'
-import {post} from '../types';
+import {post, reply} from '../types';
 import '../styles/Profile.css';
 import { useAuth } from '../utils/AuthUserProvider';
 import { signOut } from '../utils/auth';
@@ -8,6 +8,7 @@ import Post from './Post';
 import { useNavigate } from 'react-router-dom';
 import { ProfileContext } from '../index';
 import axios from 'axios';
+import Reply from '../components/Reply'
 
 
 const Profile = () => {
@@ -22,6 +23,7 @@ const Profile = () => {
   const [bio, setBio] = useState(userProfile.bio);
   const [photoURL, setPhotoURL] = useState(userProfile.photoURL);
   const [posts, setPosts] = useState([] as post[]);
+  const [replies, setReplies] = useState([] as reply[])
 
   //Delete User
   const deleteUser = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -46,14 +48,29 @@ const Profile = () => {
 
   }
 
+  const cancelSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setDisplayName(userProfile.displayName);
+    setBio(userProfile.bio)
+    setPhotoURL(userProfile.photoURL)
+    setView(0);
+  }
 
   // Fetch User's comments and posts
   useEffect(() => {
 
+    setIsLoading(true)
     axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/posts`)
-    .then(({data}) => {setPosts(data.posts); setIsLoading(false)});
+    .then(({data}) => {setPosts(data.posts || []); setIsLoading(false)});
     
-  }, [user]);
+  }, [userProfile]);
+
+  useEffect(() => {
+    setIsLoading(true)
+    axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/replies`)
+    .then(({data}) =>  {setReplies(data.replies || []); setIsLoading(false); console.log(data.replies)});
+  }, [userProfile]);
+  
 
   return (
 
@@ -68,14 +85,23 @@ const Profile = () => {
       {
         view === 0 ? (
           <div className='ProfilePosts'>
-            <h1>Posts</h1>
+            <div className='PostOrReply'>
+              <h1 className='isSelected pointer'>Posts</h1>
+              <h1 onClick={() => setView(1)} className='pointer'>Replies</h1>
+            </div>
             {posts.map((p) => <Post {...p} key = {p.postId}/>)}
             {isLoading ? <h2>Loading...</h2> : <></>}
             {posts.length < 1 && !isLoading ? <h2>You haven't made any posts yet!</h2> : <></>}
           </div>
         ) : view === 1 ? (
           <div className='ProfileComments'>
-            <h1>Comments</h1>
+            <div className='PostOrReply'>
+              <h1 onClick={() => setView(0)} className='pointer'>Posts</h1>
+              <h1 className='isSelected pointer'>Replies</h1>
+            </div>
+            {replies.map((r) => <Reply {...r}/>)}
+            {isLoading ? <h2>Loading...</h2> : <></>}
+            {replies.length < 1 && !isLoading ? <h2>You haven't made any replies yet!</h2> : <></>}
           </div>
         ) : (
           <div className='ProfileEdit'>
@@ -89,8 +115,10 @@ const Profile = () => {
                 <div className='DeleteUser'>
                   <button onClick={(e) => deleteUser(e)}>Delete User</button>
                 </div>
-                <div className='save'>
+                <div className='sideBySideButtons'>
+                  <button onClick={(e) => cancelSubmit(e)}>Cancel</button> 
                   <button onClick={ (e) => updateProfile(e)} type='submit'>Save</button>
+                  
                 </div>
             </form>
           </div>

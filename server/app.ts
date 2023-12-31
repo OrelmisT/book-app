@@ -4,7 +4,7 @@ import cors from "cors";
 import { post, profile, book, reply} from './types';
 import { signUp, updateUser, deleteUser, getUser} from "./people.controller";
 import { createPost, getUserPosts, getBookPosts, getUserReadingListPosts, deleteUserPosts, getPost, updatePostLikes} from "./post.controller";
-import { createReply, getReplies, updateReplyLikes } from "./reply.controller";
+import { createReply, getReplies, updateReplyLikes, getUserReplies } from "./reply.controller";
 import axios from 'axios';
 
 
@@ -125,6 +125,18 @@ app.get("/users/:uid/posts", async (req:any, res:any) => {
         res.status(500).json({
             error: `Something went wrong during post retrieval`
         })
+    }
+
+})
+
+app.get("/users/:uid/replies", async (req, res) => {
+    const uid = req.params.uid
+    console.log('here')
+    try {
+        const replies = await getUserReplies(uid);
+        res.status(200).json({replies: replies})
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong during reply retrieval'})
     }
 
 })

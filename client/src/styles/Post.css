@@ -20,6 +20,10 @@
    padding-bottom: 15px;
 }
 
+.BookThumbnail:hover{
+    cursor: pointer;
+}
+
 .BookThumbnail img{
     max-width: 100px;
     height: auto;
