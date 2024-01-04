@@ -2,9 +2,9 @@ import express, { Express } from "express";
 import cors from "cors";
 
 import { post, profile, book, reply} from './types';
-import { signUp, updateUser, deleteUser, getUser} from "./people.controller";
-import { createPost, getUserPosts, getBookPosts, getUserReadingListPosts, deleteUserPosts, getPost, updatePostLikes} from "./post.controller";
-import { createReply, getReplies, updateReplyLikes, getUserReplies } from "./reply.controller";
+import { signUp, updateUser, deleteUser, getUser} from "./controllers/people.controller";
+import { createPost, getUserPosts, getBookPosts, getUserReadingListPosts, deleteUserPosts, getPost, updatePostLikes, updatePost, deletePost} from "./controllers/post.controller";
+import { createReply, getReplies, updateReplyLikes, getUserReplies } from "./controllers/reply.controller";
 import axios from 'axios';
 
 
@@ -131,7 +131,6 @@ app.get("/users/:uid/posts", async (req:any, res:any) => {
 
 app.get("/users/:uid/replies", async (req, res) => {
     const uid = req.params.uid
-    console.log('here')
     try {
         const replies = await getUserReplies(uid);
         res.status(200).json({replies: replies})
@@ -201,7 +200,6 @@ app.get("/user-posts/:postId", async(req: any, res: any) => {
 
     try{
         const post = await getPost(postId)
-        console.log(post)
         res.status(200).json({postInfo: post})
 
 
@@ -215,7 +213,6 @@ app.get("/user-posts/:postId", async(req: any, res: any) => {
 app.put('/posts/:postId/likes', async(req: any, res: any) => {
     const postId = req.params.postId
     const {like, dislike, userId} = req.body
-    console.log({like, dislike, userId})
 
     try {
         await updatePostLikes(like, dislike, userId, postId)
@@ -265,7 +262,6 @@ app.get('/posts/:postId/replies', async(req: any, res: any) => {
 app.put('/replies/:replyId/likes', async(req: any, res: any) => {
     const replyId = req.params.replyId
     const {like, dislike, userId} = req.body
-    console.log({like, dislike, userId})
 
     try {
         await updateReplyLikes(like, dislike, userId, replyId)
@@ -276,6 +272,34 @@ app.put('/replies/:replyId/likes', async(req: any, res: any) => {
     }
 
 
+})
+
+
+//updatePost
+app.put('/posts/:postId', async (req, res) => {
+    const postId = req.params.postId
+    const editedPost = req.body.editedPost
+    try{
+        const updatedPost = updatePost(postId, editedPost);
+        res.status(200).json({updatedPost: updatedPost})
+
+    }catch(error){
+        res.status(500).json({error: 'Something went wrong while trying to edit this post'})
+    }
+
+})
+
+
+app.delete('/posts/:postId', async (req, res) => {
+    const postId = req.params.postId
+
+    try{
+        const deletedPost = deletePost(postId)
+        res.status(200).json({deletedPost: deletedPost})
+
+    }catch(error){
+        res.json(500).json({error: "Something went wrong while trying to delete this post"})
+    }
 })
 
 

@@ -1,6 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
-import {db} from "./firebase";
-import { post } from "./types";
+import {db} from "../firebase";
+import { post } from "../types";
 
 
 
@@ -108,4 +108,33 @@ export const updatePostLikes = async (like:boolean, dislike:boolean, userId: str
 
     }
 
+}
+
+
+export const updatePost = async (postId: string, post:post) =>{
+    const postRef =  db.collection("posts").doc(postId)
+    const postDoc = await postRef.get()
+
+    if (!postDoc.exists){
+        return null
+    }
+
+    postRef.update(post)
+
+    return (await postRef.get()).data()
+
+
+}
+
+export const deletePost = async(postId: string) => {
+    const postRef = db.collection("posts").doc(postId)
+    const postDoc = await postRef.get()
+
+    if (!postDoc.exists){
+        return null
+    }
+
+    postRef.delete()
+
+    return postDoc.data()
 }

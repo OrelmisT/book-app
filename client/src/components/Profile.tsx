@@ -68,7 +68,7 @@ const Profile = () => {
   useEffect(() => {
     setIsLoading(true)
     axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/replies`)
-    .then(({data}) =>  {setReplies(data.replies || []); setIsLoading(false); console.log(data.replies)});
+    .then(({data}) =>  {setReplies(data.replies || []); setIsLoading(false);});
   }, [userProfile]);
   
 

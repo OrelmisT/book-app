@@ -35,7 +35,7 @@ const CommentsSection = (props: {user: profile, book:book}) => {
             return;
         }  
         const newComment = {
-            postId: Date.now().toString(36) + Math.random().toString(36),
+            postId: (Date.now().toString(36) + Math.random().toString(36)).replace('.', ''),
             bookTitle: props.book.volumeInfo.title,
             title: titleInput,
             body: commentInput,

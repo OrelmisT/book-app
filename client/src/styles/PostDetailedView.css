@@ -51,7 +51,7 @@
 
 .post-text{
     height: auto;
-    
+    flex-grow: 1;
 }
 
 .post-text h4{
@@ -63,15 +63,16 @@
 
 .post-user-info{
     display: flex;
-    height: 50px;
+    height:fit-content;
     justify-content: center;
+    padding-bottom: 10px;
     
 }
 
 .post-user-info img{
     margin-top: 5px;
     margin-right: 5px;
-    height: 75%;
+    height: 40px;
     top: 50%;
     border-radius: 50%;
 }
@@ -91,5 +92,17 @@
     background-color: rgb(160, 151, 151);
 }
 
+.underLineOnHover:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
 
+.spacedButtons{
+    display: flex;
+    gap:15px;
+    justify-content: center;
+}
 
+.CommentSub{
+    margin-top: 2%;
+}

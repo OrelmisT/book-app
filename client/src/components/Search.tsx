@@ -60,7 +60,7 @@ const Search = () => {
         else{
             setBooks([]);
         }
-    },[query])
+    },[query, searchParams])
 
 
     if (view === 0){

@@ -8,5 +8,5 @@
       "esModuleInterop": true,
       "jsx": "react"
     },
-    "include": ["*.tsx", "*.ts", "app.ts"]
+    "include": ["*.tsx", "*.ts", "app.ts", "controllers/post.controller.ts", "controllers/people.controller.ts", "controllers/reply.controller.ts"]
   }

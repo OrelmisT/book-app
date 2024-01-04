@@ -75,7 +75,6 @@ const UserInterface = () => {
   return (
     <>
         <div className='banner'>
-            
             <div className='navBarGroup'>
                 <h1 className='navBarItem' onClick={() => navigate("/home")}>The Bookshelf Society</h1>
                 <img src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>

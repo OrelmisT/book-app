@@ -16,9 +16,6 @@ const SignIn = () => {
         //REDIRECT TO HOME PAGE HERE
 
         if(user.user !== null && user.user !== undefined){
-            
-            console.log("already here")
-            console.log(redirectLink)
             navigate(`${redirectLink}`)
         }
     })

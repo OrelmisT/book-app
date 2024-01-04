@@ -19,7 +19,7 @@ const ReplySection = ({postId}: {postId: string}) => {
 
     useEffect(() => {
         axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${postId}/replies`)
-        .then((res) => {setReplies(  res.data.replies); console.log(res.data.replies) })
+        .then((res) => {setReplies(  res.data.replies);})
 
         
 
@@ -44,7 +44,7 @@ const ReplySection = ({postId}: {postId: string}) => {
             return;
         }  
         const newReply = {
-            replyId: Date.now().toString(36) + Math.random().toString(36),
+            replyId: (Date.now().toString(36) + Math.random().toString(36)).replace('.', ''),
             postId: postId,
             posterId: profile.uid,
             timestamp: getDateTime(),

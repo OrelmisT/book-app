@@ -1,5 +1,5 @@
-import {db} from "./firebase";
-import { profile } from "./types";
+import {db} from "../firebase";
+import { profile } from "../types";
 
 const peopleCollectionRef = db.collection("people");
 

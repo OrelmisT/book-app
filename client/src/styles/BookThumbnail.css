@@ -1,6 +1,7 @@
 .thumbnailCard{
     background-color: rgb(101, 72, 31);
     height: 375px;
+    border: solid black 2px;
 }
 
 .thumbnailCard:hover{

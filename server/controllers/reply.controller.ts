@@ -1,6 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
-import {db} from "./firebase";
-import { reply } from "./types";
+import {db} from "../firebase";
+import { reply } from "../types";
 
 const replyCollectionRef = db.collection("replies");
 
