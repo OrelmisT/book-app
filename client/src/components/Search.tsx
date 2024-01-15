@@ -3,14 +3,18 @@ import '../styles/Search.css'
 import { book} from '../types'
 import BookThumbnail from './BookThumbnail';
 
-import axios from 'axios';
 import {useSearchParams, Navigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { bookSearchApi } from '../utils/api';
 
 
 const Search = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get("query")
+    const startIndex = searchParams.get('startIndex')
+    const [queryState, setQueryState] = useState(query)
+    const [startIndexState, setStartIndexState] = useState(startIndex)
 
 
 
@@ -34,22 +38,25 @@ const Search = () => {
             }
             
             // redirect(`search?query=${searchQuery}`)
-            setSearchParams(`query=${searchQuery}`)
+            setSearchParams(`query=${searchQuery}&startIndex=${0}`)
             // booksearch(searchQuery);
         }
     }
 
-    const booksearch = (search: string) => {
-        
-        
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=40&key=${import.meta.env.REACT_APP_BOOKS_KEY}`)
-        .then(({data}) => setBooks(data.items));
-        
-    }
-
     const [books, setBooks] = useState([] as book[]);
 
+    const booksearch = async (search: string) => {
+        const bookQueryResults = await bookSearchApi(search, startIndex);
+        console.log(bookQueryResults)
+
+        setBooks(bookQueryResults.items)
+        window.scrollTo(0,0); 
+    }
+
+    
+
     const [searchQuery, setQuery] = useState("");
+
 
     //Fetch book results 
     useEffect(() =>{
@@ -60,8 +67,9 @@ const Search = () => {
         else{
             setBooks([]);
         }
-    },[query, searchParams])
+    },[query, searchParams, startIndex, queryState, startIndexState])
 
+  
 
     if (view === 0){
 
@@ -78,6 +86,16 @@ const Search = () => {
                 )
             })}
         </div>
+
+        {(startIndex !== undefined && startIndex !== null && books.length !== 0) ?
+            <div className='resultNav'>
+                <button disabled={Number(startIndex) === 0} onClick={ () => setSearchParams(`query=${searchQuery}&startIndex=${Number(startIndex) - 15}`)}>prevPage</button>
+                {startIndex? Number(startIndex)/15 + 1:<></>}
+                <button onClick={ () => setSearchParams(`query=${searchQuery}&startIndex=${Number(startIndex) + 15}`)}>nextPage</button>
+
+            </div>
+        
+        : <></>}
     </div>
   )}
   else{

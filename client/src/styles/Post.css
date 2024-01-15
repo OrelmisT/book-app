@@ -6,6 +6,7 @@
     margin-right: auto;
     margin-bottom: 10px;
     border: 2px solid black;
+    border-radius: 10px;
    
 }
 
@@ -16,7 +17,7 @@
    width: 25%;
    display: flex;
    flex-direction: column;
-   justify-content: center;
+   justify-content: flex-start;
    padding-bottom: 15px;
 }
 
@@ -29,12 +30,16 @@
     height: auto;
     vertical-align: auto;
     top:50%;
+    border-radius: 10px;
+    border: 2px solid black;
    
 }
 
 .commentContents{
     text-align: left;
-    width: 75%;
+    width: 72%;
+    display:flex;
+    flex-direction: column;
 }
 
 .commentContents h3{
@@ -51,6 +56,21 @@
 
 .commentContents:hover{
     cursor: pointer;
+}
+
+
+.theComment{
+    flex-grow: 1;
+    display: block;
+    word-wrap: break-word;
+    max-height: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.userInfo{
+    flex-grow: 0;
+
 }
 
 

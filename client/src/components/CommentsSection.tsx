@@ -2,13 +2,16 @@ import {useEffect, useState} from 'react'
 import {book, post, profile} from '../types'
 import Post from './Post';
 import '../styles/CommentsSection.css'
-import axios from 'axios';
+import { createPost, getBookPosts } from '../utils/api';
+import { TiArrowSortedDown } from "@react-icons/all-files/ti/TiArrowSortedDown";
+
 
 const CommentsSection = (props: {user: profile, book:book}) => {
 
     const [bookComments, setBookComments] = useState([] as post[]);
     const [commentInput, setCommentInput] = useState("");
     const [titleInput, setTitleInput] = useState("");
+    const [inputIsOpen, setInputIsOpen] = useState(false);
 
     //Returns a time stamp in the format: "MM/DD/YYYY HH:MM AM/PM timezone"
     const getDateTime = () => {
@@ -22,9 +25,15 @@ const CommentsSection = (props: {user: profile, book:book}) => {
         return `${month}/${day}/${year} ${hours}:${minutes} ${ampm} UTC${date.getTimezoneOffset() / 60}`;
     }
 
+    //fix this
     useEffect( () => {
-      axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${props.book.id}`)
-      .then(({data}) => setBookComments(data.posts));
+
+      const fetchBookPosts = async ()=>{
+        const fetchedBookComments = await getBookPosts(props.book.id);
+        setBookComments(fetchedBookComments)
+      }
+
+      fetchBookPosts()
 
     }, [props.book]);
 
@@ -34,6 +43,17 @@ const CommentsSection = (props: {user: profile, book:book}) => {
             alert("Please enter a valid title and comment");
             return;
         }  
+
+        if(commentInput.length > 10000){
+          alert("10,000 character limit for posts")
+          return
+        }
+
+        if(titleInput.length > 300){
+          alert("300 character limit for post titles")
+          return
+        }
+
         const newComment = {
             postId: (Date.now().toString(36) + Math.random().toString(36)).replace('.', ''),
             bookTitle: props.book.volumeInfo.title,
@@ -51,9 +71,7 @@ const CommentsSection = (props: {user: profile, book:book}) => {
         } as post;
 
         
-        // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
-        axios.post(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {post: newComment})
-
+        createPost(props.user.uid, newComment)
         setCommentInput("");
         setTitleInput("");
 
@@ -63,18 +81,20 @@ const CommentsSection = (props: {user: profile, book:book}) => {
 
   return (
     <div>
-        <h1>Posts</h1>
-
-        {bookComments.length === 0 && <h2>No Comments Yet. Be the first!</h2>}
       <div className='CommentSub'>
-        <div className='commentInputGroup'>
           <h2>Leave a Comment</h2>
+          <div id={'activeButton'}>
+            <TiArrowSortedDown className={`expandArrow ${inputIsOpen ? 'expandArrowActive' : 'expandArrowInactive'}`} onClick={() => setInputIsOpen((prev) => !prev)} />
+          </div>
+        <div className={`commentInputGroup ${inputIsOpen? 'inputActive' : 'inputInactive'}`}>
           <h4>Title</h4>
-          <input type='text' value={titleInput} onChange={(e) => setTitleInput(e.target.value)}></input>
+          <input type='text' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} className="titleInput"></input>
           <h4>Comment</h4>
             <textarea value={commentInput} className="commentInput" onChange={(e) => setCommentInput(e.target.value)}></textarea>
+            <div>
+              <button onClick={handleCommentInput}>Post</button>
+            </div>
         </div>
-        <button onClick={handleCommentInput}>Post</button>
       </div>
         {bookComments.map((c) => {
             return(

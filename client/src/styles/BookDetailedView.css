@@ -5,12 +5,28 @@
     margin-right: auto;
     border: solid 2px black;
     margin-top: 10px;
-    margin-bottom: 10px;
+   
+    border-radius: 10px;
+}
+
+.book-info img{
+    border-radius: 10px;
+    border: 2px solid black;
 }
 
 .book-info h4 {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    padding-bottom: 25px;
+  
+}
+
+.buttons{
+    padding-bottom: 20px;
+}
+
+
+.underLinePointerOnHover:hover{
+    cursor: pointer;
+    text-decoration:underline;
 }

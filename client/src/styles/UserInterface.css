@@ -14,6 +14,7 @@
     padding-right: 13px;
     margin-left: -10px;
     border-bottom: solid black 2px;
+    z-index: 1;
 }
 
 .navLink{
@@ -29,10 +30,9 @@
 
 .banner h1{
     padding-left: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     margin-top: 1.5%;
+    text-shadow: 2px 2px black;
+    
 }
 
 .banner h1:hover {
@@ -92,9 +92,15 @@
 }
 
 #pfp{
-    height: 75%;
+    height: 5rem;
+    width: 5rem;
     border-radius: 50%;
     border: 2px solid black;
+    position: relative;
+    right: 47px;
+    top: 5px;
+    background-size: cover;
+
 }
 
 #pfp:hover{
@@ -108,3 +114,69 @@
     border-color: black;
 }
 
+.dropDown{
+    position: fixed;
+    background-color: rgb(96, 74, 48);
+    border-radius: 10px;
+    z-index: 5;
+    top: 120px;
+    right: 4%;
+    border: solid black 2px;
+    padding: 5px;
+}
+
+.dropDown li{
+    list-style: None;
+    text-align: left;
+    margin-left: 0;
+    padding:0;
+
+}
+
+.dropDown li:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.dropDown li:last-child{
+    margin-top: 10px;
+    border-top: black solid 1px;
+    padding-top: 10px;
+    margin-bottom: 0;
+
+}
+
+.dropDown ul{
+    margin-left: 0;
+    padding: 0;
+}
+
+.dropDown::before{
+    content: "";
+    position: absolute;
+    background-color: rgb(96, 74, 48);
+    transform: rotateZ(45deg);
+    width: 20px;
+    height: 20px;
+    top:-12px;
+    right: 28px;
+    border-top: 2px black solid;
+    border-left: 2px black solid;
+    background-position: center;
+
+
+}
+
+
+.dropDownIsInactive{
+    opacity: 0;
+    top: 110px;
+    transform: scale(0);
+}
+
+.dropDownIsActive{
+    top: 120px;
+    opacity: 1;
+    transition: opacity 0.5s, top 0.5s;
+
+}

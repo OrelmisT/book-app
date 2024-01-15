@@ -1,13 +1,20 @@
-import { post } from '../types'
+import { post, profile } from '../types'
 import '../styles/Post.css'
 import { useNavigate} from 'react-router-dom'
-// import { ProfileContext } from '../index'
-// import {useContext} from 'react';
+import { getUser } from '../utils/api'
+import { useQuery } from 'react-query'
 
 const Post = (props:post) => {
   const nav = useNavigate()
 
-  // const [userProfile] = useContext(ProfileContext)
+  //Fetch user data for up-to-date user display name
+
+  const userQuery = useQuery({
+    queryFn: () =>  getUser(props.userId).then((fetchedUser) => fetchedUser),
+    enabled: (props.userId !== undefined) && (props.userId !== null),
+    queryKey: ["users", props.userId],
+    initialData: {} as profile
+  })
 
   return (
     <>
@@ -18,11 +25,16 @@ const Post = (props:post) => {
           </div>
       
             <div className='commentContents' onClick={ () => nav(`/home/posts/${props.postId}`)}>
-              <h2>{props.title}</h2>
-            
-              <h3>{props.body}</h3>
-          
-              <h4>{`${props.userDisplayName} : ${props.timestamp}`}</h4>
+              <div className='theComment'>
+
+                <h2>{props.title}</h2>
+              
+                <h3>{props.body}</h3>
+              </div>
+
+              <div className='userInfo'>
+                <h4>{`${userQuery?.data?.displayName} : ${props.timestamp}`}</h4>
+              </div>
             </div>
         
       </div>

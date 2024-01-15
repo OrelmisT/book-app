@@ -8,6 +8,7 @@
     margin-left: auto;
     margin-right: auto;
     padding-bottom: 20px;
+    border-radius: 10px;
 }
 
 input{
@@ -27,12 +28,28 @@ p{
     color: white;
 }
 
-.prof-photo{
-    width: auto;
-    max-height: 200px;
-    border-radius: 50%;
-    border: solid black 2px;
+
+.image-circle-cropper{
+    width: 200px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  background-size:cover;
+  margin-left: auto;
+  margin-right: auto;
+  border: black 2px solid;
+  margin-top: 0;
+  background-position: center;
+  
 }
+
+/* .prof-photo{
+    display: inline;
+  margin: 0 auto;
+  width: ;
+    
+} */
 
 .PostOrReply{
     display: flex;
@@ -58,3 +75,4 @@ p{
 .sideBySideButtons button{
     width: 80px;
 }
+

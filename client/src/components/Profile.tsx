@@ -1,20 +1,23 @@
 
 import React, { useEffect, useState, useContext } from 'react'
-import {post, reply} from '../types';
+import {post, profile, reply} from '../types';
 import '../styles/Profile.css';
 import { useAuth } from '../utils/AuthUserProvider';
 import { signOut } from '../utils/auth';
 import Post from './Post';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ProfileContext } from '../index';
-import axios from 'axios';
 import Reply from '../components/Reply'
+import { deleteUserProfile, getUser, getUserPosts, getUserReplies } from '../utils/api';
+import {useQuery} from 'react-query';
 
 
-const Profile = () => {
+//Edit this so that it can be used to view your own profile or another person's profile
 
-  const[userProfile, setUserProfile] = useContext(ProfileContext);
-  const [isLoading, setIsLoading] = useState(true);
+const Profile = () => { 
+
+  const[uProfile, setUserProfile] = useContext(ProfileContext);
+  const[userProfile, setUProfile] = useState({} as profile)
 
   const user = useAuth();
   const navigate = useNavigate();
@@ -22,13 +25,52 @@ const Profile = () => {
   const [displayName, setDisplayName] = useState(userProfile.displayName);
   const [bio, setBio] = useState(userProfile.bio);
   const [photoURL, setPhotoURL] = useState(userProfile.photoURL);
-  const [posts, setPosts] = useState([] as post[]);
-  const [replies, setReplies] = useState([] as reply[])
+
+
+  const routeParams = useParams()
+
+  
+  useEffect(() => {
+    console.log('here')
+
+    if(routeParams?.userId === null || routeParams?.userId === undefined ){
+      setUProfile(uProfile)
+      setBio(uProfile.bio)
+      setDisplayName(uProfile.displayName)
+      setPhotoURL(uProfile.photoURL)
+
+      return 
+    }
+    else if(routeParams.userId === user.user?.uid) {
+      setUProfile(uProfile)
+      setBio(uProfile.bio)
+      setDisplayName(uProfile.displayName)
+      setPhotoURL(uProfile.photoURL)
+      return
+
+    }
+    else{
+
+      const getUserInfo = async() => {
+        const profile = await getUser(routeParams.userId || '')
+        setUProfile(profile)
+        setBio(profile.bio)
+        setDisplayName(profile.displayName)
+        setPhotoURL(profile.photoURL)
+      }
+
+      getUserInfo()
+    }
+
+    
+
+
+  }, [uProfile, routeParams.userId])
 
   //Delete User
-  const deleteUser = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const deleteUser = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    axios.delete(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`);
+    deleteUserProfile(userProfile.uid)
     user.clearUser?.();
     signOut();
     navigate("/login")
@@ -44,6 +86,10 @@ const Profile = () => {
 
     setUserProfile(updatedUser);
 
+      setBio(updatedUser.bio)
+      setDisplayName(updatedUser.displayName)
+      setPhotoURL(updatedUser.photoURL)
+
     setView(0);
 
   }
@@ -56,21 +102,19 @@ const Profile = () => {
     setView(0);
   }
 
-  // Fetch User's comments and posts
-  useEffect(() => {
+  const userPostsQuery = useQuery({
+      enabled: userProfile?.uid !== undefined && userProfile?.uid !== null,
+      queryKey: ["userPosts",userProfile?.uid],
+      queryFn:() => getUserPosts(userProfile.uid).then((fetchedPosts) => fetchedPosts),
+      initialData: []
+  })
 
-    setIsLoading(true)
-    axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/posts`)
-    .then(({data}) => {setPosts(data.posts || []); setIsLoading(false)});
-    
-  }, [userProfile]);
-
-  useEffect(() => {
-    setIsLoading(true)
-    axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}/replies`)
-    .then(({data}) =>  {setReplies(data.replies || []); setIsLoading(false);});
-  }, [userProfile]);
-  
+  const userRepliesQuery = useQuery({
+    enabled: userProfile?.uid !== undefined && userProfile?.uid !== null,
+    queryKey: ["userReplies",userProfile?.uid],
+    queryFn:() => getUserReplies(userProfile.uid).then((fetchedReplies) => fetchedReplies),
+    initialData: []
+})
 
   return (
 
@@ -78,9 +122,11 @@ const Profile = () => {
       <div className='Profile'>
 
         <h1>{userProfile.displayName}</h1>
-        <img src={userProfile.photoURL} alt='Profile Picture' className='prof-photo'/>
+        <div className='image-circle-cropper' style={{backgroundImage: `url(${userProfile.photoURL})`}}>
+          {/* <img src={userProfile.photoURL} alt='Profile Picture' className='prof-photo'/> */}
+        </div>
         <h2>{userProfile.bio}</h2>
-        {(view === 0 || view === 1) && <button onClick={() => setView(2)}>Edit Profile</button>}
+        {((view === 0 || view === 1) && userProfile.uid === uProfile.uid )&& <button onClick={() => setView(2)}>Edit Profile</button>}
       </div>
       {
         view === 0 ? (
@@ -89,9 +135,9 @@ const Profile = () => {
               <h1 className='isSelected pointer'>Posts</h1>
               <h1 onClick={() => setView(1)} className='pointer'>Replies</h1>
             </div>
-            {posts.map((p) => <Post {...p} key = {p.postId}/>)}
-            {isLoading ? <h2>Loading...</h2> : <></>}
-            {posts.length < 1 && !isLoading ? <h2>You haven't made any posts yet!</h2> : <></>}
+            {userPostsQuery.data.map((p : post) => <Post {...p} key = {p.postId}/>)}
+            {userPostsQuery.isLoading ? <h2>Loading...</h2> : <></>}
+            {userPostsQuery.data.length < 1 && !userPostsQuery.isLoading ? <h2>No posts yet!</h2> : <></>}
           </div>
         ) : view === 1 ? (
           <div className='ProfileComments'>
@@ -99,9 +145,9 @@ const Profile = () => {
               <h1 onClick={() => setView(0)} className='pointer'>Posts</h1>
               <h1 className='isSelected pointer'>Replies</h1>
             </div>
-            {replies.map((r) => <Reply {...r}/>)}
-            {isLoading ? <h2>Loading...</h2> : <></>}
-            {replies.length < 1 && !isLoading ? <h2>You haven't made any replies yet!</h2> : <></>}
+            {userRepliesQuery.data.map((r : reply) => <Reply {...r}/>)}
+            {userRepliesQuery.isLoading ? <h2>Loading...</h2> : <></>}
+            {userRepliesQuery.data.length < 1 && !userRepliesQuery.isLoading ? <h2>No replies yet!</h2> : <></>}
           </div>
         ) : (
           <div className='ProfileEdit'>

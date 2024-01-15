@@ -1,10 +1,17 @@
 import { useEffect, useState, useContext } from "react"
 import { useParams, useNavigate} from "react-router-dom"
 import { post, profile } from "../types"
-import axios from "axios"
 import '../styles/PostDetailedView.css'
 import { ProfileContext } from "../index"
 import ReplySection from "../components/ReplySection"
+import { getUser, getPost, updatePost, deletePost, updatePostLikes } from "../utils/api"
+import { AiFillLike } from "@react-icons/all-files/ai/AiFillLike";
+import { AiOutlineLike } from "@react-icons/all-files/ai/AiOutlineLike";
+import { AiFillDislike } from "@react-icons/all-files/ai/AiFillDislike";
+import {AiOutlineDislike} from "@react-icons/all-files/ai/AiOutlineDislike"
+import { AiFillEdit } from "@react-icons/all-files/ai/AiFillEdit";
+import { MdDelete } from "@react-icons/all-files/md/MdDelete";
+
 
 const PostDetailedView = () => {
     const [user] = useContext(ProfileContext)
@@ -24,13 +31,13 @@ const PostDetailedView = () => {
     const [view, setView] = useState(0); 
     const [commentInput, setCommentInput] = useState("");
     const [titleInput, setTitleInput] = useState("");
+    const [postIsExpanded, setPostIsExpanded] = useState(false);
 
     
     const handleCommentInput = () =>{
         const editedPost = {...postInfo, body: commentInput, title: titleInput, edited: true}
         setPostInfo({...editedPost, likers: likersList, dislikers: disLikersList})
-        //send request here to update in database
-        axios.put(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${editedPost.postId}`, {editedPost})
+        updatePost(editedPost)
         setView(0)
     }
 
@@ -41,18 +48,14 @@ const PostDetailedView = () => {
         }
 
     const handleDelete = async () => {
-
-        //send request to delete here
-
-        await axios.delete(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${postInfo.postId}`)
+        await deletePost(postInfo.postId)
         nav("..")
-
 
     }
     
     const updateLikeDislike = async (likeState:boolean, dislikeState:boolean)  => {
-        await axios.put(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${postInfo.postId}/likes`
-        , {like: likeState, dislike: dislikeState, userId: profile.uid})
+
+        await updatePostLikes(postInfo.postId, {like: likeState, dislike: dislikeState, userId: profile.uid})
 
     }
     
@@ -114,14 +117,16 @@ const PostDetailedView = () => {
 
     useEffect( () => {
 
-        axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/user-posts/${postId}`)
-        .then(({data}) => {
-            setPostInfo(data.postInfo);
-            setCommentInput(data.postInfo.body)
-            setTitleInput(data.postInfo.title)            
-        })
+        //HERE
+        const getPostInfo = async () =>{
+            const postData =  await getPost(postId || '');
+            setPostInfo(postData);
+            setCommentInput(postData.body)
+            setTitleInput(postData.title) 
 
+        }
 
+        getPostInfo()
 
     }, [])
 
@@ -142,17 +147,24 @@ const PostDetailedView = () => {
 
     }, [postInfo, postInfo.likers, postInfo.dislikers, profile.uid])
 
-    useEffect(() => {
+    useEffect(  () => {
         if (postInfo.userId !== null && postInfo.userId !== undefined){
             
-            axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${postInfo.userId}`)
-            .then(({data}) => {setPosterInfo(data.userInfo)});
-            setIsLoading(false)
+            const getUserInfo = async () =>{
+
+                console.log('here')
+                const userInfo = await getUser(postInfo.userId);
+                
+                setPosterInfo(userInfo);
+                setIsLoading(false)
+            }
+
+            getUserInfo();
         }
     }, [postInfo])
 
 
-    //Add in another use effect here to fetch all of the replies to this post
+    //Add in another use effect here to fetch all of the replies to this posFt
 
 
     if (isLoading){
@@ -171,18 +183,26 @@ const PostDetailedView = () => {
                 <div className="postconts">
                     <div className="post-text">
                         <h2>{postInfo.title}</h2>
-                        <h4>{postInfo.body}</h4>
+                        <div className={`post-body ${(!postIsExpanded && postInfo.body.length > 1500) && 'post-collapsed'}`}>
+                            <h4>{postInfo.body}</h4>
+                        </div>
                     </div>
+                    {(!postIsExpanded && postInfo.body.length > 1500) && <h6 className="expand-collapse-buttons" onClick={() => setPostIsExpanded(true)}>See More</h6>}
+                    {(postIsExpanded && postInfo.body.length > 1500) && <h6 className="expand-collapse-buttons" onClick={() => setPostIsExpanded(false)}>See Less</h6>}
                     <div className="post-user-info">
-                     <img src={posterInfo.photoURL}></img> 
-                     <p>{posterInfo.displayName} {postInfo.timestamp}{postInfo.edited ? ' (edited)' : ""} {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(1)}> {user.uid === postInfo.userId? "Edit" : ""}</span> {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(3)}> {user.uid === postInfo.userId? "Delete" : ""} </span></p>  
+                     <img src={posterInfo.photoURL} onClick={() => nav(`../users/${posterInfo.uid}`)} className="pointerOnHover"></img> 
+                     <p><span onClick={() => nav(`../users/${posterInfo.uid}`)} className="underLineOnHover">{posterInfo.displayName}</span> {postInfo.timestamp}{postInfo.edited ? ' (edited)' : ""} {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(1)}> {user.uid === postInfo.userId? <AiFillEdit/> : ""}</span> {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(3)}> {user.uid === postInfo.userId? <MdDelete/> : ""} </span></p>  
                     </div>
 
                 </div>
                 <div className="likes">
-                    <button onClick={() => handleLike()} className={isLiked ? 'enabled' : ''}>^</button>
+                    <div>
+                        {isLiked? <AiFillLike onClick={() => handleLike()} className="pointerOnHover"/> : <AiOutlineLike onClick={() => handleLike()} className="pointerOnHover"/>}
+                    </div>
                     {likersList.length - disLikersList.length}
-                    <button onClickCapture={() => handleDislike()} className={isDisliked ? 'enabled': ''}>v</button>
+                    <div>
+                        {isDisliked? <AiFillDislike onClick={() => handleDislike()} className="pointerOnHover"/> : <AiOutlineDislike onClick={() => handleDislike()} className="pointerOnHover"/>}
+                    </div>
                 </div>
 
             </div>
@@ -198,7 +218,7 @@ const PostDetailedView = () => {
         <div className='commentInputGroup'>
           <h2>Edit Post</h2>
           <h4>Title</h4>
-          <input type='text' value={titleInput} onChange={(e) => setTitleInput(e.target.value)}></input>
+          <input type='text' value={titleInput} onChange={(e) => setTitleInput(e.target.value)} className="titleEditInput"></input>
           <h4>Comment</h4>
             <textarea value={commentInput} className="commentInput" onChange={(e) => setCommentInput(e.target.value)}></textarea>
         </div>

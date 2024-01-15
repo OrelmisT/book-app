@@ -4,12 +4,16 @@ import axios from 'axios';
 import Reply from "./Reply";
 import { ProfileContext } from "../index";
 import "../styles/ReplySection.css"
+import { getPostReplies } from "../utils/api";
+import { TiArrowSortedDown } from "@react-icons/all-files/ti/TiArrowSortedDown";
 
 
 
 
 
 const ReplySection = ({postId}: {postId: string}) => {
+
+    const [inputIsOpen, setInputIsOpen] = useState(false);
 
     const [profile] = useContext(ProfileContext)
 
@@ -18,10 +22,12 @@ const ReplySection = ({postId}: {postId: string}) => {
 
 
     useEffect(() => {
-        axios.get(`${import.meta.env.REACT_APP_BACKEND_ROOT}/posts/${postId}/replies`)
-        .then((res) => {setReplies(  res.data.replies);})
+        const getReplies = async () =>{
+            const replies = await getPostReplies(postId);
+            setReplies(replies)
+        }
 
-        
+        getReplies()
 
     }, [])
 
@@ -43,6 +49,12 @@ const ReplySection = ({postId}: {postId: string}) => {
             alert("Please enter a valid title and comment");
             return;
         }  
+
+        if(replyInput.length >  10000){  
+            alert("10,000 Character Limit")
+            return;
+        }
+        
         const newReply = {
             replyId: (Date.now().toString(36) + Math.random().toString(36)).replace('.', ''),
             postId: postId,
@@ -56,7 +68,6 @@ const ReplySection = ({postId}: {postId: string}) => {
         } as reply;
 
         
-        // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${props.user.uid}/posts`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({post: newComment})});
         axios.post(`${import.meta.env.REACT_APP_BACKEND_ROOT}/replies`, newReply)
 
         setReplyInput("");
@@ -67,13 +78,18 @@ const ReplySection = ({postId}: {postId: string}) => {
 
     return(
         <div>
-        {replies.length === 0 && <h2>No Comments Yet. Be the first!</h2>}
       <div className='ReplySub'>
-        <div className='replyInputGroup'>
-          <h2>Leave a Reply</h2>   
-            <textarea value={replyInput} onChange={(e) => setReplyInput(e.target.value)}></textarea>
+        <div id="expand">
+            <TiArrowSortedDown id={'expandButtonHover'} className={inputIsOpen ? 'expandActive' : 'expandInactive'} onClick={() => setInputIsOpen((prev) => !prev)} />
         </div>
-        <button onClick={handleReplyInput}>Post</button>
+        <h2 >Leave a Reply</h2> 
+        <div className={`${inputIsOpen? 'active' : 'inActive'}`}>
+
+                <div className='replyInputGroup'>
+                    <textarea value={replyInput} onChange={(e) => setReplyInput(e.target.value)} className="replyInput"></textarea>
+                </div>
+                <button onClick={handleReplyInput}>Post</button>
+        </div>
       </div>
         {replies.sort((a, b) => {
             const countA = a.dislikers.length - a.likers.length

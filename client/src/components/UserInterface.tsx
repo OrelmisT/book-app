@@ -1,20 +1,31 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState,  createRef } from 'react'
 import { useAuth } from '../utils/AuthUserProvider';
 import '../styles/UserInterface.css';
 import { signOut } from '../utils/auth';
-import { NavLink, Outlet, useNavigate, useLocation} from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation, useSearchParams} from 'react-router-dom';
 import { ProfileContext } from '../index'
 import axios from 'axios';
 
 
 const UserInterface = () => {
+    const [dropDownActivated, setDropDownActivated] = useState(false)
     const user = useAuth();
     const navigate = useNavigate();
-    const path =  useLocation().pathname
+    const location = useLocation()
+    const path =  location.pathname;
+    const queryParamsPath = location.search;
+    const [searchParams] = useSearchParams()
+    const searchQuery = searchParams.get('query')
+    const searchStartIndex = searchParams.get('startIndex')
+
+    const dropDownRef = createRef<HTMLDivElement>();
+    const pfpRef = createRef<HTMLImageElement>();
+
 
     useEffect(() => {
         if(!user.user){
-            navigate(`/login?redirect-to=${path}`)
+            console.log(queryParamsPath)
+            navigate(`/login?redirect-to=${path}`, {state:{searchQuery, searchStartIndex}})
         }
     }, [])
 
@@ -38,7 +49,7 @@ const UserInterface = () => {
                     displayName: user.user?.displayName,
                     uid: uid,
                     email: user.user?.email,
-                    photoURL: user.user?.photoURL,
+                    photoURL: 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg',
                     bio: '',
                     readingList: [] as string[]
                 }
@@ -53,17 +64,32 @@ const UserInterface = () => {
 
         }
             
-    }, [])
+    }, [user.user])
 
     useEffect(() => {
         setPfp(userProfile.photoURL);
-        // fetch(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`,
-        // {method: 'PUT', headers: {'Content-Type': 'application/json'},
-        // body: JSON.stringify( userProfile)});
-
         axios.put(`${import.meta.env.REACT_APP_BACKEND_ROOT}/users/${userProfile.uid}`, userProfile);
         
     }, [userProfile]);
+
+
+    useEffect( () => {
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore 
+        const handleOutsideClick = (e) => {
+            if(dropDownRef.current && !dropDownRef.current.contains(e.target) && dropDownActivated ){
+                setDropDownActivated(false);
+            }
+        }
+        document.addEventListener("mousedown", handleOutsideClick)
+
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick)
+        }
+
+    }, [dropDownRef])
+
 
     //sign out
     const signOutHandler = () => {
@@ -77,7 +103,19 @@ const UserInterface = () => {
         <div className='banner'>
             <div className='navBarGroup'>
                 <h1 className='navBarItem' onClick={() => navigate("/home")}>The Bookshelf Society</h1>
-                <img src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>
+                <img ref={pfpRef} src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>
+                <div ref={dropDownRef} className={`dropDown ${dropDownActivated? 'dropDownIsActive' : 'dropDownIsInactive'}`} >
+                    <ul>
+                        <li onClick={ () => {navigate('settings'); setDropDownActivated(false);}}>Settings</li>
+                        <li onClick={() => {navigate('saved');setDropDownActivated(false)}}>Saved</li>
+                        <li onClick={() => {navigate('following'); setDropDownActivated(false)}}>Following</li>
+                        <li onClick={() => {navigate('messages'); setDropDownActivated(false)}}>Messages</li>
+                        <li onClick={() => {signOutHandler(); setDropDownActivated(false)}}>Sign Out</li>
+                    </ul>
+
+                </div> 
+
+
             </div>
 
             <div className='navBarGroup' id='centerNavBar'>
@@ -88,16 +126,16 @@ const UserInterface = () => {
             </div>
 
             <div className='navBarGroup'>
-                <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"} onClick={() => navigate("profile")}></img>
-                <button onClick={signOutHandler} className='navBarItem'>Sign Out</button>
+                <div className='navBarItem' id = {"pfp"} style={{backgroundImage:`url(${pfp})`}} onClick={() => setDropDownActivated(prev => !prev )}></div>
+                {/* <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"} onClick={() => setDropDownActivated(prev => !prev )}></img> */}
             </div>
         
 
         </div>
 
+        
+
         <Outlet />
-    
-        {/* <PageContent  pageNumber={contentPage}/> */}
     </>
   )
 }

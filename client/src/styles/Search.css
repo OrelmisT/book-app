@@ -1,6 +1,11 @@
 input{
     margin-top: 5%;
-    width: 50%;
+    width: 35%;
+    border-radius: 20px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 2px solid black;
 }
 
 .BookSearchResults{
@@ -13,4 +18,11 @@ input{
 
 .SearchHeader{
     margin-bottom: -5%;
+}
+
+.resultNav{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
 }
