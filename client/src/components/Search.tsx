@@ -4,7 +4,6 @@ import { book} from '../types'
 import BookThumbnail from './BookThumbnail';
 
 import {useSearchParams, Navigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
 import { bookSearchApi } from '../utils/api';
 
 
@@ -13,8 +12,8 @@ const Search = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get("query")
     const startIndex = searchParams.get('startIndex')
-    const [queryState, setQueryState] = useState(query)
-    const [startIndexState, setStartIndexState] = useState(startIndex)
+    const [queryState] = useState(query)
+    const [startIndexState] = useState(startIndex)
 
 
 

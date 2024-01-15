@@ -4,7 +4,7 @@ import Post from './Post';
 import {ProfileContext} from '../index'
 import { NavLink } from 'react-router-dom';
 import { getAllReadingListPosts } from '../utils/api';
-import {useMutation, useQuery, useQueryClient} from 'react-query'
+import {useQuery} from 'react-query'
 
 
 const Home = () => {
@@ -41,6 +41,7 @@ const Home = () => {
       })}
     </>)
   }
+  else{return <></>}
 }
 
 export default Home
