@@ -1,6 +1,6 @@
 .Profile{
     background-color: rgb(87, 66, 40);
-    width: 50%;
+    width: 80%;
     border-width: 2px;
     border-style: solid;
     border-color: black;
@@ -30,8 +30,8 @@ p{
 
 
 .image-circle-cropper{
-    width: 200px;
-  height: 200px;
+    width: 150px;
+  height: 150px;
   position: relative;
   overflow: hidden;
   border-radius: 50%;
@@ -76,3 +76,14 @@ p{
     width: 80px;
 }
 
+@media screen and (max-width: 1100px) {
+    .Profile{
+        font-size: small;
+    }
+    
+    .image-circle-cropper{
+        height: 100px;
+        width: 100px;
+    }
+   
+}

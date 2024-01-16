@@ -15,7 +15,9 @@
 }
 
 .book-info h4 {
-    width: 80%;
+    max-width: 80%;
+    max-height: 40%;
+    
     margin-left: auto;
     margin-right: auto;
   
@@ -29,4 +31,10 @@
 .underLinePointerOnHover:hover{
     cursor: pointer;
     text-decoration:underline;
+}
+
+@media screen and (max-width: 1100px) {
+    .book-info{
+        font-size: small;
+    }
 }

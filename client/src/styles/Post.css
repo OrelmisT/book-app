@@ -7,6 +7,7 @@
     margin-bottom: 10px;
     border: 2px solid black;
     border-radius: 10px;
+    max-height: 20%;
    
 }
 
@@ -26,7 +27,7 @@
 }
 
 .BookThumbnail img{
-    max-width: 100px;
+    max-width: 75%;
     height: auto;
     vertical-align: auto;
     top:50%;
@@ -74,3 +75,8 @@
 }
 
 
+@media screen and (max-width: 1100px) {
+    .postThumbnail{
+        font-size: small;
+    }
+}
