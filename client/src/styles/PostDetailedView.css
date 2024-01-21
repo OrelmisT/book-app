@@ -40,6 +40,8 @@
     display:flex;
     flex-direction: column;
     border-right: 2px solid black;
+    padding: 10px;
+    word-wrap: break-word;
 
 
 }
@@ -125,4 +127,32 @@
 .expand-collapse-buttons:hover{
     cursor:pointer;
     text-decoration: underline;
+}
+
+
+@media screen and (max-width:480px) {
+   .post{
+    width: 100%;
+    margin-top: 20px;
+   }
+
+   .bookthumb img{
+        max-width: 75%;
+   }
+
+   .bookthumb{
+    font-size: x-small;
+   }
+
+   .postconts{
+        font-size: x-small;
+        
+   }
+
+
+   post-user-info img{
+    height: 1px;
+    width: 1px;
+   }
+    
 }

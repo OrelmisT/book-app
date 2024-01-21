@@ -93,3 +93,11 @@
         font-size: small;
     }
 }
+
+
+@media screen and (max-width:480px) {
+    .reply-thumbnail{
+        width: 85%;
+        font-size: x-small;
+    }
+}

@@ -80,3 +80,29 @@ textarea{
 #expandButtonHover:hover{
     cursor: pointer;
 }
+
+
+@media screen and (max-width:480px) {
+    .ReplySub{
+        width: 85%;
+        font-size: x-small;
+        padding: 0;
+    }
+
+    #expand{
+        top:17px;
+        margin-top: 0;
+    }
+
+    textarea{
+    
+        min-height: 60px;
+        height: 60px;
+    }
+
+    .ReplySub button{
+        width: 50px;
+        height: 30px;
+        margin-bottom: 5px;
+    }
+}
