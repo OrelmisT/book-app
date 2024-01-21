@@ -222,3 +222,58 @@
     }
 
 }
+
+
+@media screen and (max-width:480px) {
+    #centerNavBar{
+        display: none;
+    }
+
+    .banner{
+        height: 65px;
+        margin-top: -15px;
+    }
+
+    #pfp{
+        width: 50px;
+        height: 50px;
+        margin-top: 6px;
+    }
+
+    .dropDownIsInactive{
+        font-size: small;
+        opacity: 0;
+        top: 80px;
+        transform: scale(0);
+    }
+    
+    .dropDownIsActive{
+        font-size: small;
+        top: 90px;
+        opacity: 1;
+        transition: opacity 0.5s, top 0.5s;
+    
+    }
+
+    .dropDown::before{
+        content: "";
+        position: absolute;
+        background-color: rgb(96, 74, 48);
+        transform: rotateZ(45deg);
+        width: 20px;
+        height: 20px;
+        top:-12px;
+        right: 21px;
+        border-top: 2px black solid;
+        border-left: 2px black solid;
+        background-position: center;
+    
+    
+    }
+    
+    .dropDown{
+        margin-right: -4px;
+    }
+
+
+}

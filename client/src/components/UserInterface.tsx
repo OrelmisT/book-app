@@ -19,7 +19,7 @@ const UserInterface = () => {
     const searchStartIndex = searchParams.get('startIndex')
 
     const dropDownRef = createRef<HTMLDivElement>();
-    const pfpRef = createRef<HTMLImageElement>();
+    const pfpRef = createRef<HTMLDivElement>();
 
 
     useEffect(() => {
@@ -81,6 +81,9 @@ const UserInterface = () => {
             if(dropDownRef.current && !dropDownRef.current.contains(e.target) && dropDownActivated ){
                 setDropDownActivated(false);
             }
+            else if (pfpRef.current?.contains(e.target) && !dropDownActivated){
+                setDropDownActivated(true)
+            }
         }
         document.addEventListener("mousedown", handleOutsideClick)
 
@@ -103,7 +106,7 @@ const UserInterface = () => {
         <div className='banner'>
             <div className='navBarGroup'>
                 <h1 className='navBarItem' onClick={() => navigate("/home")}>The Bookshelf Society</h1>
-                <img ref={pfpRef} src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>
+                <img src='https://i.imgur.com/gcUlma9.png' id='logo' className='navBarItem'></img>
                 <div ref={dropDownRef} className={`dropDown ${dropDownActivated? 'dropDownIsActive' : 'dropDownIsInactive'}`} >
                     <ul>
                         <li onClick={ () => {navigate('settings'); setDropDownActivated(false);}}>Settings</li>
@@ -126,7 +129,7 @@ const UserInterface = () => {
             </div>
 
             <div className='navBarGroup'>
-                <div className='navBarItem' id = {"pfp"} style={{backgroundImage:`url(${pfp})`}} onClick={() => setDropDownActivated(prev => !prev )}></div>
+                <div className='navBarItem' ref={pfpRef} id = {"pfp"} style={{backgroundImage:`url(${pfp})`}} ></div>
                 {/* <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"} onClick={() => setDropDownActivated(prev => !prev )}></img> */}
             </div>
         

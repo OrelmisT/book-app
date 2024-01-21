@@ -80,3 +80,18 @@
         font-size: small;
     }
 }
+
+
+@media screen and (max-width:480px) {
+    .postThumbnail{
+        width: 95%;
+    }
+
+    .BookThumbnail{
+        padding:5px;
+    }
+
+    .BookThumbnail h2{
+        font-size:small
+    }
+}
