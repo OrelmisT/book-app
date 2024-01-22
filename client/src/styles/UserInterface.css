@@ -187,6 +187,7 @@
     justify-content: space-evenly;
     background-color: rgb(98, 69, 31);
     left: 0;
+    border-top: solid black 2px;
 }
 
 .MobileNavBar .navLink{

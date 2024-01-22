@@ -164,20 +164,20 @@ const UserInterface = () => {
 
         <div className='MobileNavBar'>
                 <div className='mobileHome'>
-                    <NavLink to="." end className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoHome></IoHome></NavLink>
-                    <NavLink to="." end className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoHomeOutline></IoHomeOutline></NavLink>
+                    <NavLink to="." end className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoHome color='black' size={40}></IoHome></NavLink>
+                    <NavLink to="." end className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoHomeOutline color='black' size={40}></IoHomeOutline></NavLink>
                 </div>
                 <div className='mobileProfile'>
-                    <NavLink to = "profile" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoPerson></IoPerson></NavLink>
-                    <NavLink to = "profile" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoPersonOutline></IoPersonOutline></NavLink>
+                    <NavLink to = "profile" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoPerson color='black' size={40}></IoPerson></NavLink>
+                    <NavLink to = "profile" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoPersonOutline color='black' size={40}></IoPersonOutline></NavLink>
                 </div>
                 <div className='mobileReadingList'>
-                    <NavLink to = "reading-list" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><RiBook3Fill></RiBook3Fill></NavLink>
-                    <NavLink to = "reading-list" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><RiBook3Line></RiBook3Line></NavLink>
+                    <NavLink to = "reading-list" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><RiBook3Fill color='black' size={40}></RiBook3Fill></NavLink>
+                    <NavLink to = "reading-list" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><RiBook3Line color='black' size={40}></RiBook3Line></NavLink>
                 </div>
                 <div className='mobileSearch'>
-                    <NavLink to = "search" className = {({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoSearchSharp></IoSearchSharp></NavLink>
-                    <NavLink to = "search" className = {({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoSearchOutline></IoSearchOutline></NavLink>
+                    <NavLink to = "search" className = {({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoSearchSharp color='black' size={40}></IoSearchSharp></NavLink>
+                    <NavLink to = "search" className = {({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoSearchOutline color='black' size={40}></IoSearchOutline></NavLink>
 
                 </div>
         </div>
