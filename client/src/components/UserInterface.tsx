@@ -5,6 +5,26 @@ import { signOut } from '../utils/auth';
 import { NavLink, Outlet, useNavigate, useLocation, useSearchParams} from 'react-router-dom';
 import { ProfileContext } from '../index'
 import axios from 'axios';
+import { IoHome } from "@react-icons/all-files/io5/IoHome";
+import { IoHomeOutline} from "@react-icons/all-files/io5/IoHomeOutline";
+import { IoPersonOutline } from "@react-icons/all-files/io5/IoPersonOutline";
+import { IoPerson } from "@react-icons/all-files/io5/IoPerson";
+import { RiBook3Fill } from "@react-icons/all-files/ri/RiBook3Fill";
+import { RiBook3Line } from "@react-icons/all-files/ri/RiBook3Line";
+import { IoSearchOutline } from "@react-icons/all-files/io5/IoSearchOutline";
+import { IoSearchSharp } from "@react-icons/all-files/io5/IoSearchSharp";
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const UserInterface = () => {
@@ -132,6 +152,8 @@ const UserInterface = () => {
                 <div className='navBarItem' ref={pfpRef} id = {"pfp"} style={{backgroundImage:`url(${pfp})`}} ></div>
                 {/* <img src={pfp} alt='Profile Picture' className='navBarItem' id={"pfp"} onClick={() => setDropDownActivated(prev => !prev )}></img> */}
             </div>
+
+            
         
 
         </div>
@@ -139,6 +161,26 @@ const UserInterface = () => {
         
 
         <Outlet />
+
+        <div className='MobileNavBar'>
+                <div className='mobileHome'>
+                    <NavLink to="." end className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoHome></IoHome></NavLink>
+                    <NavLink to="." end className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoHomeOutline></IoHomeOutline></NavLink>
+                </div>
+                <div className='mobileProfile'>
+                    <NavLink to = "profile" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoPerson></IoPerson></NavLink>
+                    <NavLink to = "profile" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoPersonOutline></IoPersonOutline></NavLink>
+                </div>
+                <div className='mobileReadingList'>
+                    <NavLink to = "reading-list" className={({isActive}) => isActive ? '' : 'inactiveMobileNav' }><RiBook3Fill></RiBook3Fill></NavLink>
+                    <NavLink to = "reading-list" className={({isActive}) => isActive ? 'inactiveMobileNav' : '' }><RiBook3Line></RiBook3Line></NavLink>
+                </div>
+                <div className='mobileSearch'>
+                    <NavLink to = "search" className = {({isActive}) => isActive ? '' : 'inactiveMobileNav' }><IoSearchSharp></IoSearchSharp></NavLink>
+                    <NavLink to = "search" className = {({isActive}) => isActive ? 'inactiveMobileNav' : '' }><IoSearchOutline></IoSearchOutline></NavLink>
+
+                </div>
+        </div>
     </>
   )
 }

@@ -179,6 +179,25 @@
 
 }
 
+.MobileNavBar{
+    position: fixed;
+    bottom:0px;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: rgb(98, 69, 31);
+    left: 0;
+}
+
+.MobileNavBar .navLink{
+    background-color: black;
+    color: black;
+}
+
+.inactiveMobileNav{
+    display: none;
+}
+
 @media screen and (max-width: 1100px) {
     .banner h1{
         display: none;
@@ -276,4 +295,11 @@
     }
 
 
+}
+
+
+@media screen and (min-width:481px) {
+    .MobileNavBar{
+        display: none;
+    }
 }
