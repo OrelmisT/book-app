@@ -124,7 +124,8 @@ const Reply = (reply:reply) => {
             {(textExpanded &&reply.body.length > 850 ) && <h6 onClick={() => setTextExpanded(false)} className="expandCollapse"> See Less</h6>}
             {(!textExpanded && reply.body.length > 850) && <h6 onClick={() => setTextExpanded(true)} className="expandCollapse">See More</h6>}
             <div className="user-reply-info">
-                <img src={userQuery?.data?.photoURL ? userQuery?.data?.photoURL : defaultImage} className="pointerOnHover" onClick={() => nav(`../users/${userQuery?.data?.uid}`)}></img>
+                {/* <img src={userQuery?.data?.photoURL ? userQuery?.data?.photoURL : defaultImage} className="pointerOnHover" onClick={() => nav(`../users/${userQuery?.data?.uid}`)}></img> */}
+                <div className="pointerOnHover" id="replyUserPFP" onClick={() => nav(`../users/${userQuery?.data?.uid}`)} style={{backgroundImage: `url(${userQuery?.data?.photoURL ?? defaultImage})`}}></div>
                 <h4><span className="pointerOnHover underLineOnHover" onClick={() => nav(`../users/${userQuery?.data?.uid}`)}>{userQuery?.data?.displayName}</span> : {reply.timestamp}</h4>
 
             </div>

@@ -99,6 +99,7 @@
     display: relative;
     background-size: cover;
     margin-top: 7px;
+    background-position: center;
 }
 
 #pfp:hover{

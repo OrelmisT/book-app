@@ -10,6 +10,8 @@ import { ProfileContext } from '../index';
 import Reply from '../components/Reply'
 import { deleteUserProfile, getUser, getUserPosts, getUserReplies } from '../utils/api';
 import {useQuery} from 'react-query';
+import {storage} from '../utils/firebase'
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 
 
 //Edit this so that it can be used to view your own profile or another person's profile
@@ -26,9 +28,35 @@ const Profile = () => {
   const [bio, setBio] = useState(userProfile.bio);
   const [photoURL, setPhotoURL] = useState(userProfile.photoURL);
 
+  const [imageUpload, setImageUpload] = useState(null as File | null)
 
   const routeParams = useParams()
 
+  const uploadImage = async () => {
+    if (imageUpload === null){
+      return null;
+    }
+
+    else{
+      const imageId = Date.now()
+      const imageRef = ref(storage, `images/${imageId}`);
+
+      await uploadBytes(imageRef, imageUpload)
+      const url = await getDownloadURL(imageRef);
+      return url
+
+      // uploadBytes(imageRef, imageUpload).then(() => {
+
+
+
+      //   getDownloadURL(imageRef).then((url) => {return url})
+        
+        
+        
+      // })
+        
+    }
+  }
   
   useEffect(() => {
     console.log('here')
@@ -77,10 +105,13 @@ const Profile = () => {
 }
 
 
-  const updateProfile = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const updateProfile = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+
+    const newImageUrl = await uploadImage() ?? photoURL;
+  
     const updatedUser = {displayName: displayName
-      , bio: bio, photoURL: photoURL, uid: userProfile.uid, readingList: userProfile.readingList,
+      , bio: bio, photoURL: newImageUrl, uid: userProfile.uid, readingList: userProfile.readingList,
        email: userProfile.email};
 
 
@@ -88,7 +119,7 @@ const Profile = () => {
 
       setBio(updatedUser.bio)
       setDisplayName(updatedUser.displayName)
-      setPhotoURL(updatedUser.photoURL)
+      setPhotoURL(newImageUrl)
 
     setView(0);
 
@@ -156,8 +187,8 @@ const Profile = () => {
                 <input type='text' value={displayName} onChange={(e) =>setDisplayName(e.target.value)}></input>
                 <p>Bio:</p>
                 <input type='text' value={bio} onChange={(e) => setBio(e.target.value)}></input>
-                <p>Photo URL:</p>
-                <input type='text' value={photoURL} onChange={(e) => setPhotoURL(e.target.value)}></input>
+                <p>Profile Photo:</p>
+                <input id="pfpInput" type='file' onChange={(event) => setImageUpload(event.target.files ? event.target.files[0] : null)}></input>
                 <div className='DeleteUser'>
                   <button onClick={(e) => deleteUser(e)}>Delete User</button>
                 </div>
@@ -166,6 +197,7 @@ const Profile = () => {
                   <button onClick={ (e) => updateProfile(e)} type='submit'>Save</button>
                   
                 </div>
+
             </form>
           </div>
         )

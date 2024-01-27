@@ -190,7 +190,8 @@ const PostDetailedView = () => {
                     {(!postIsExpanded && postInfo.body.length > 1500) && <h6 className="expand-collapse-buttons" onClick={() => setPostIsExpanded(true)}>See More</h6>}
                     {(postIsExpanded && postInfo.body.length > 1500) && <h6 className="expand-collapse-buttons" onClick={() => setPostIsExpanded(false)}>See Less</h6>}
                     <div className="post-user-info">
-                     <img src={posterInfo.photoURL} onClick={() => nav(`../users/${posterInfo.uid}`)} className="pointerOnHover"></img> 
+                     <div id="postPFP" style={{backgroundImage: `url(${posterInfo.photoURL})`}} onClick={() => nav(`../users/${posterInfo.uid}`)} className="pointerOnHover"></div>
+                     {/* <img src={posterInfo.photoURL} onClick={() => nav(`../users/${posterInfo.uid}`)} className="pointerOnHover"></img>  */}
                      <p><span onClick={() => nav(`../users/${posterInfo.uid}`)} className="underLineOnHover">{posterInfo.displayName}</span> {postInfo.timestamp}{postInfo.edited ? ' (edited)' : ""} {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(1)}> {user.uid === postInfo.userId? <AiFillEdit/> : ""}</span> {user.uid === postInfo.userId? "|" : ""} <span className="underLineOnHover" onClick={() => setView(3)}> {user.uid === postInfo.userId? <MdDelete/> : ""} </span></p>  
                     </div>
 

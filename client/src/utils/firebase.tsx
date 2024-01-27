@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import {getStorage} from "firebase/storage"
 
 const firebaseConfig  = {
     apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -10,8 +11,10 @@ const firebaseConfig  = {
     appId: import.meta.env.REACT_APP_APP_ID
   };
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+const storage = getStorage(app);
 
 const auth = getAuth();
 
-export { auth };
+export { auth, storage};

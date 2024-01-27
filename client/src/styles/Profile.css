@@ -76,6 +76,15 @@ p{
     width: 80px;
 }
 
+
+#pfpInput{
+    padding:0;
+    margin-top: 60px;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+}
+
 @media screen and (max-width: 1100px) {
     .Profile{
         font-size: small;
